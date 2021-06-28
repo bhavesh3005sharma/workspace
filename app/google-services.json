@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1060825425190",
+    "project_id": "friends-3073a",
+    "storage_bucket": "friends-3073a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1060825425190:android:ce7fa96e537e47e096cde7",
+        "android_client_info": {
+          "package_name": "com.gathering.friends"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1060825425190-eatjiveffefhceu419n3s61kk9r7obc3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB_13psHv-pmFgi6E2IBcGNcBmkGWGx_UM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1060825425190-eatjiveffefhceu419n3s61kk9r7obc3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
