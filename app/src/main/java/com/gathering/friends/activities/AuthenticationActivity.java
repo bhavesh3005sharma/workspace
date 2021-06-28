@@ -10,9 +10,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.gathering.friends.Database.Prefs;
 import com.gathering.friends.R;
 import com.gathering.friends.databinding.ActivityAuthenticationBinding;
 import com.gathering.friends.models.LoginRequest;
+import com.gathering.friends.models.User;
 import com.gathering.friends.util.Constants;
 import com.gathering.friends.util.Helper;
 import com.gathering.friends.viewmodels.AuthViewModel;
@@ -38,11 +40,13 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
 
     @Override
     protected void onStart() {
-        Intent intent = new Intent(AuthenticationActivity.this, HomePage.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
+        if (Prefs.isUserLoggedIn(this)) {
+            Intent intent = new Intent(AuthenticationActivity.this, HomePage.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+            finish();
+        }
         super.onStart();
     }
 
@@ -56,6 +60,8 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
                     setInActive(activityAuthenticationBinding.btnSignUp);
                     activityAuthenticationBinding.inputLayout.btnSubmit.setText("Sign-In");
                     activityAuthenticationBinding.inputLayout.textForgotPassword.setVisibility(View.VISIBLE);
+                    activityAuthenticationBinding.inputLayout.textInputUsername.setVisibility(View.GONE);
+                    activityAuthenticationBinding.inputLayout.textInputDisplayName.setVisibility(View.GONE);
                 }
                 break;
             case R.id.btnSignUp:
@@ -65,42 +71,55 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
                     setActive(activityAuthenticationBinding.btnSignUp);
                     activityAuthenticationBinding.inputLayout.btnSubmit.setText("Sign-Up");
                     activityAuthenticationBinding.inputLayout.textForgotPassword.setVisibility(View.GONE);
+                    activityAuthenticationBinding.inputLayout.textInputUsername.setVisibility(View.VISIBLE);
+                    activityAuthenticationBinding.inputLayout.textInputDisplayName.setVisibility(View.VISIBLE);
                 }
                 break;
             case R.id.btnSubmit:
                 String email = activityAuthenticationBinding.inputLayout.textInputEmail.getEditText().getText().toString();
                 String password = activityAuthenticationBinding.inputLayout.textInputPassword.getEditText().getText().toString();
-
-                if (!valid(email, password)) return;
-
-                showProgress();
+                String username = activityAuthenticationBinding.inputLayout.textInputUsername.getEditText().getText().toString();
+                String displayName = activityAuthenticationBinding.inputLayout.textInputDisplayName.getEditText().getText().toString();
 
                 LoginRequest loginRequest = new LoginRequest(email, password);
                 if (wantLogin) {
-                    authViewModel.isCorrectUser(loginRequest).observe(this, new Observer<String>() {
+                    if (!valid(email, password)) return;
+                    showProgress();
+
+                    authViewModel.isCorrectUser(AuthenticationActivity.this, loginRequest).observe(this, new Observer<String>() {
                         @Override
                         public void onChanged(String s) {
                             hideProgress();
 
                             if (s != null && s.equals(Constants.SUCCESS)) {
                                 s = "Login Success!";
-                                startActivity(new Intent(AuthenticationActivity.this, HomePage.class));
+                                Intent intent = new Intent(AuthenticationActivity.this, HomePage.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
                                 finish();
                             }
                             Helper.toast(AuthenticationActivity.this, s);
                         }
                     });
                 } else {
-                    authViewModel.registerUser(loginRequest).observe(this, new Observer<String>() {
+                    if (!valid(email, password, username, displayName)) return;
+                    showProgress();
+
+                    User user = new User(username, email, displayName, null, null);
+                    authViewModel.registerUser(user, password).observe(this, new Observer<String>() {
                         @Override
                         public void onChanged(String s) {
                             hideProgress();
 
                             if (s != null && s.equals(Constants.SUCCESS)) {
-                                s = "Registered Successfully\n Verification Email Sent Verify to Login.";
-                                startActivity(new Intent(AuthenticationActivity.this, HomePage.class));
-                                finish();
+                                s = "Registered Successfully\n Verification Email Sent, Verify to Login";
                             }
+
+                            if (s != null && s.equals(Constants.DUPLICATE)) {
+                                s = "This username is already in use. Please choose another one";
+                            }
+
                             Helper.toast(AuthenticationActivity.this, s);
                         }
                     });
@@ -111,7 +130,6 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
     }
 
     private boolean valid(String email, String password) {
-
         if (email.isEmpty()) {
             activityAuthenticationBinding.inputLayout.textInputEmail.setError("Email is Required");
             activityAuthenticationBinding.inputLayout.textInputEmail.requestFocus();
@@ -127,6 +145,24 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
             activityAuthenticationBinding.inputLayout.textInputPassword.requestFocus();
             return false;
         } else activityAuthenticationBinding.inputLayout.textInputPassword.setError(null);
+
+        return true;
+    }
+
+    private boolean valid(String email, String password, String username, String displayName) {
+        if (!valid(email, password)) return false;
+
+        if (username.isEmpty()) {
+            activityAuthenticationBinding.inputLayout.textInputUsername.setError("Username is Required");
+            activityAuthenticationBinding.inputLayout.textInputUsername.requestFocus();
+            return false;
+        } else activityAuthenticationBinding.inputLayout.textInputUsername.setError(null);
+
+        if (displayName.isEmpty()) {
+            activityAuthenticationBinding.inputLayout.textInputDisplayName.setError("Display Name is Required");
+            activityAuthenticationBinding.inputLayout.textInputDisplayName.requestFocus();
+            return false;
+        } else activityAuthenticationBinding.inputLayout.textInputDisplayName.setError(null);
 
         return true;
     }
@@ -148,6 +184,4 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         btn.setBackgroundColor(getColor(R.color.orange));
         btn.setTextColor(getColor(R.color.white));
     }
-
-
 }
