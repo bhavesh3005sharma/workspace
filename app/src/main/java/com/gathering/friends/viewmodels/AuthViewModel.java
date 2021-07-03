@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class AuthViewModel extends ViewModel {
     private final FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -113,6 +114,9 @@ public class AuthViewModel extends ViewModel {
                     Prefs.setUserLoggedIn(context, true);
                     Prefs.setUserData(context, user);
                     Log.d("TAG", Prefs.isUserLoggedIn(context) + " " + Prefs.getUser(context).getEmail() + " logged in");
+
+                    // get FCM token and save to remote database to send push notifications to user.
+                    getFCMToken(context, user.getUsername());
                     break;
                 }
             }
@@ -129,4 +133,38 @@ public class AuthViewModel extends ViewModel {
                 (String) ds.child("displayName").getValue(), (String) ds.child("profileUri").getValue(), (String) ds.child("uid").getValue());
     }
 
+    private void getFCMToken(Context context, String username) {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w("FCM_TOKEN Task : ", "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+
+                        // Log and send FCM Token to server
+                        Log.d("FCM_TOKEN", token);
+                        saveTokenToServer(context, token, username);
+                    }
+                });
+    }
+
+    private void saveTokenToServer(Context context, String token, String username) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        databaseReference.child(username).child("fcm_token").setValue(token).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    // successfully saved
+                    Prefs.getUser(context).setFcm_token(token);
+                } else {
+                    // error
+                }
+            }
+        });
+    }
 }
