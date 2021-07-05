@@ -21,6 +21,7 @@ import com.squareup.okhttp.Response;
 import org.json.JSONObject;
 
 import java.util.Collections;
+import java.util.UUID;
 
 public class Helper {
 
@@ -79,5 +80,9 @@ public class Helper {
             }
         }.execute();
 
+    }
+
+    public static String getUniqueID() {
+        return UUID.randomUUID().toString();
     }
 }

@@ -1,12 +1,15 @@
 package com.gathering.friends.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.gathering.friends.activities.DirectMessageActivity;
 import com.gathering.friends.databinding.LayoutChatsBinding;
 import com.gathering.friends.models.User;
 
@@ -34,6 +37,14 @@ public class ChatAdapter extends RecyclerView.Adapter<ChatAdapter.viewHolder> {
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         User user = list.get(position);
         holder.layoutChatsBinding.setUser(user);
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, DirectMessageActivity.class);
+                intent.putExtra("room_id", user.getRoomId());
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override

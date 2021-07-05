@@ -31,8 +31,6 @@ import com.google.firebase.database.ValueEventListener;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.UUID;
-
 public class CallActivity extends AppCompatActivity implements View.OnClickListener {
     String userType = null;
     private static final String TAG = "CallActivity";
@@ -207,12 +205,8 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private String getUniqueID() {
-        return UUID.randomUUID().toString();
-    }
-
     private void initializePeer() {
-        uniqueId = getUniqueID();
+        uniqueId = Helper.getUniqueID();
 
         callJavascriptFunction("javascript:init(\"" + uniqueId + "\")");
 

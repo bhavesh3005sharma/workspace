@@ -41,28 +41,38 @@ public class ConnectionRequestAdapter extends RecyclerView.Adapter<ConnectionReq
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         User user = list.get(position);
         holder.layoutConnectionRequestBinding.setUser(user);
+        String from = user.getUsername();
+        String to = Prefs.getUser(context).getUsername();
 
         // modify UI according to request type
         if (requestType.equals(Constants.REQUEST_SENT)) {
             holder.layoutConnectionRequestBinding.accept.setVisibility(View.GONE);
             holder.layoutConnectionRequestBinding.reject.setText(context.getString(R.string.withdraw));
+            // as now we have sent this request to 'to'
+            String temp = from;
+            from = to;
+            to = temp;
         }
 
         holder.layoutConnectionRequestBinding.setUser(user);
+        String finalTo = to;
+        String finalFrom = from;
         holder.layoutConnectionRequestBinding.accept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 list.remove(user);
                 notifyDataSetChanged();
-                ConnectionRequestHandler.acceptRequest(Prefs.getUser(context).getUsername(), user.getUsername());
+                ConnectionRequestHandler.acceptRequest(finalTo, finalFrom);
             }
         });
+        String finalTo1 = to;
+        String finalFrom1 = from;
         holder.layoutConnectionRequestBinding.reject.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 list.remove(user);
                 notifyDataSetChanged();
-                ConnectionRequestHandler.cancelRequest(Prefs.getUser(context).getUsername(), user.getUsername());
+                ConnectionRequestHandler.cancelRequest(finalTo1, finalFrom1);
             }
         });
     }

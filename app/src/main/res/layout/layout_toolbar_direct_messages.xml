@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="room"
+            type="com.gathering.friends.models.Room" />
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="20dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimary"
+            android:paddingBottom="10dp">
+
+            <ImageView
+                android:id="@+id/videoCallImg"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/ic_videocam"
+                app:tint="@android:color/white" />
+
+            <ImageView
+                android:id="@+id/roomProfileImage"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/image"
+                android:loadImage="@{room.photoUri}"
+                android:scaleType="fitXY"
+                android:src="@drawable/user"
+                app:layout_constraintBottom_toBottomOf="@+id/videoCallImg"
+                app:layout_constraintStart_toEndOf="@+id/imageViewArrowBack"
+                app:layout_constraintTop_toTopOf="@+id/videoCallImg" />
+
+            <TextView
+                android:id="@+id/toolbarTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:text="@{(room.roomName!=null)?room.roomName:`Conversations`}"
+                android:textColor="@color/white"
+                android:textSize="18sp"
+                app:layout_constraintBottom_toBottomOf="@+id/videoCallImg"
+                app:layout_constraintStart_toEndOf="@+id/roomProfileImage"
+                app:layout_constraintTop_toTopOf="@+id/videoCallImg" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="10dp"
+                android:background="#CAC7C7"
+                app:layout_constraintEnd_toEndOf="@+id/videoCallImg"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="@+id/imageViewArrowBack"
+                app:layout_constraintTop_toBottomOf="@+id/roomProfileImage" />
+
+            <TextView
+                android:id="@+id/roomDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:maxHeight="60dp"
+                android:text="@{(room.roomDescription!=null)?room.roomDescription:`Best place for your workspace!!`}"
+                android:textColor="@color/white"
+                app:layout_constraintEnd_toEndOf="@+id/textView6"
+                app:layout_constraintStart_toStartOf="@+id/textView6"
+                app:layout_constraintTop_toBottomOf="@+id/textView6" />
+
+            <ImageView
+                android:id="@+id/imageViewArrowBack"
+                android:layout_width="40dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:elevation="100dp"
+                app:layout_constraintBottom_toBottomOf="@+id/toolbarTitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/toolbarTitle"
+                app:srcCompat="@drawable/ic_arrow_back"
+                app:tint="#FFFFFF" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+</layout>

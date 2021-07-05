@@ -12,22 +12,18 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:usesCleartextTraffic="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Friends">
+        android:theme="@style/Theme.Friends"
+        android:usesCleartextTraffic="true">
 
-        <!--  Add FCM Service -->
+        <!-- Add FCM Service -->
         <service android:name=".util.NotificationMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-        </service>
-
-        <!-- Added to create & handle incoming call notifications -->
-        <service android:name=".util.CallService" />
-
-        <!-- Broadcast receiver to listen for Hang Up event of a Call from notification -->
+        </service> <!-- Added to create & handle incoming call notifications -->
+        <service android:name=".util.CallService" /> <!-- Broadcast receiver to listen for Hang Up event of a Call from notification -->
         <receiver
             android:name=".util.HungUpBroadcast"
             android:exported="false" />
@@ -35,6 +31,9 @@
         <activity
             android:name=".activities.CallActivity"
             android:screenOrientation="portrait"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activities.DirectMessageActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.HomePage"

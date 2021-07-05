@@ -27,13 +27,18 @@ public class ConnectionRequestHandler {
         // remove the request from sent and received section of these users
         cancelRequest(to, from);
 
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference databaseReferenceUser = FirebaseDatabase.getInstance().getReference("users");
+        DatabaseReference databaseReferenceRoom = FirebaseDatabase.getInstance().getReference().child("rooms");
 
         // get a room id where they can connect
-        String roomId = databaseReference.push().getKey();
+        String roomId = databaseReferenceRoom.push().getKey();
 
         // make user available in their connections and set their room id
-        databaseReference.child(to).child("connections").child(from).setValue(roomId);
-        databaseReference.child(from).child("connections").child(to).setValue(roomId);
+        databaseReferenceUser.child(to).child("connections").child(from).setValue(roomId);
+        databaseReferenceUser.child(from).child("connections").child(to).setValue(roomId);
+
+        // create a duo room and add these 2 participants
+        databaseReferenceRoom.child(roomId).child("details").child("participants").child(from).setValue(roomId);
+        databaseReferenceRoom.child(roomId).child("details").child("participants").child(to).setValue(roomId);
     }
 }

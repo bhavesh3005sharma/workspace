@@ -23,7 +23,6 @@
             android:loadImage="@{user.profileUri}"
             android:scaleType="fitXY"
             android:src="@drawable/user"
-            app:civ_shadow="true"
             app:layout_constraintBottom_toBottomOf="@+id/constraintLayout2"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -73,11 +72,13 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="@string/accept"
+                android:textAllCaps="false"
                 android:textColor="@android:color/holo_green_light"
                 app:layout_constraintEnd_toStartOf="@+id/reject"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/description" />
+                app:layout_constraintBottom_toBottomOf="@+id/reject"
+                app:layout_constraintTop_toTopOf="@+id/reject" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/reject"
@@ -86,12 +87,13 @@
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
                 android:text="@string/reject"
+                android:textAllCaps="false"
                 android:textColor="@android:color/holo_red_light"
-                app:layout_constraintBottom_toBottomOf="@+id/accept"
+                app:layout_constraintStart_toEndOf="@+id/accept"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/accept"
-                app:layout_constraintTop_toTopOf="@+id/accept" />
+                app:layout_constraintTop_toBottomOf="@+id/description" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView

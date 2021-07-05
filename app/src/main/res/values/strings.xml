@@ -20,6 +20,7 @@
     <string name="requests_sent">Requests Sent</string>
     <string name="requests_received">Requests Received</string>
     <string name="connected">Connected</string>
+    <string name="enter_your_message_here">Enter your Message here.</string>
 
 
 </resources>
