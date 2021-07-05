@@ -45,12 +45,26 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="5dp"
-                android:layout_marginTop="16dp"
-                android:text="@{user.displayName +`\n (`+user.username + `)`}"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@{user.displayName}"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:text="@{`@`+user.username}"
+                android:textSize="15sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/name" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/accept"
@@ -63,7 +77,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/reject"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/name" />
+                app:layout_constraintTop_toBottomOf="@+id/description" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/reject"
@@ -84,7 +98,7 @@
             android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_margin="5dp"
-            android:background="#000000"
+            android:background="@color/placeholder_bg"
             android:textSize="20sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

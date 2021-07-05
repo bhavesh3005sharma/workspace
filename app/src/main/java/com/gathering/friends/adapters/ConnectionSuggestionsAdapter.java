@@ -39,6 +39,7 @@ public class ConnectionSuggestionsAdapter extends RecyclerView.Adapter<Connectio
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         User user = list.get(position);
         holder.layoutConnectionSuggestionBinding.setUser(user);
+
         if (user.getConnectionStatus().equals(Constants.UNKNOWN)) {
             holder.layoutConnectionSuggestionBinding.connect.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -40,6 +40,7 @@ public class ConnectionRequestAdapter extends RecyclerView.Adapter<ConnectionReq
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         User user = list.get(position);
+        holder.layoutConnectionRequestBinding.setUser(user);
 
         // modify UI according to request type
         if (requestType.equals(Constants.REQUEST_SENT)) {

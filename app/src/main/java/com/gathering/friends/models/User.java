@@ -19,6 +19,10 @@ public class User implements Serializable {
 
     String connectionStatus;
 
+    // this will be used for local use only :
+    // when this user is visible in some other users connection chat list then this field stores their common room id
+    String roomId;
+
     public String getConnectionStatus() {
         return connectionStatus;
     }
@@ -33,6 +37,14 @@ public class User implements Serializable {
         this.displayName = displayName;
         this.profileUri = profileUri;
         this.uid = uid;
+    }
+
+    public String getRoomId() {
+        return roomId;
+    }
+
+    public void setRoomId(String roomId) {
+        this.roomId = roomId;
     }
 
     public boolean isLoggedIn() {
