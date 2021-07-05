@@ -15,8 +15,8 @@ import android.webkit.WebViewClient;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.gathering.friends.Database.Prefs;
 import com.gathering.friends.R;
+import com.gathering.friends.database.Prefs;
 import com.gathering.friends.databinding.ActivityCallBinding;
 import com.gathering.friends.util.CallService;
 import com.gathering.friends.util.Constants;

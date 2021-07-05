@@ -43,6 +43,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'com.google.firebase:firebase-database:20.0.0'
     implementation 'com.google.firebase:firebase-messaging:22.0.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -55,4 +56,10 @@ dependencies {
 
     // Volley  for API Call
     implementation 'com.squareup.okhttp:okhttp:2.7.5'
+
+    // circular image view
+    implementation 'com.mikhaellopez:circularimageview:4.2.0'
+
+    // glide to load image
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
 }

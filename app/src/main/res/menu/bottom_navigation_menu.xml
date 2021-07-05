@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/workspace"
+        android:icon="@drawable/ic_workspaces"
+        android:title="Workspace" />
+
+    <item
+        android:id="@+id/chats"
+        android:icon="@drawable/ic_chat"
+        android:title="Chats" />
+
+    <item
+        android:id="@+id/connection_requests"
+        android:icon="@drawable/ic_connect"
+        android:title="Connections" />
+
+    <!--    <item-->
+    <!--        android:id="@+id/notifications"-->
+    <!--        android:icon="@drawable/ic_notifications"-->
+    <!--        android:title="Notifications" />-->
+
+    <!--    <item-->
+    <!--        android:id="@+id/more"-->
+    <!--        android:icon="@drawable/ic_more"-->
+    <!--        android:title="More" />-->
+
+</menu>

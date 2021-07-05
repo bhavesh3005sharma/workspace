@@ -8,7 +8,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.gathering.friends.Database.Prefs;
+import com.gathering.friends.database.Prefs;
 import com.gathering.friends.models.LoginRequest;
 import com.gathering.friends.models.User;
 import com.gathering.friends.util.Constants;

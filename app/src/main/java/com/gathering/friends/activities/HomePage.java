@@ -4,24 +4,32 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
-import com.gathering.friends.Database.Prefs;
+import com.gathering.friends.R;
+import com.gathering.friends.database.Prefs;
 import com.gathering.friends.databinding.ActivityHomePageBinding;
+import com.gathering.friends.fragments.ChatFragment;
+import com.gathering.friends.fragments.ConnectionsFragment;
+import com.gathering.friends.fragments.WorkspaceFragment;
 import com.gathering.friends.util.Constants;
 import com.gathering.friends.util.Helper;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class HomePage extends AppCompatActivity {
+public class HomePage extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     ActivityHomePageBinding activityHomePageBinding;
     private final String[] permissions = new String[]{(Manifest.permission.CAMERA), (Manifest.permission.RECORD_AUDIO)};
-    private final int requestCode = 10102;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +37,12 @@ public class HomePage extends AppCompatActivity {
 
         activityHomePageBinding = ActivityHomePageBinding.inflate(getLayoutInflater());
         setContentView(activityHomePageBinding.getRoot());
+
+        activityHomePageBinding.navigation.setOnNavigationItemSelectedListener(this);
+
+        if (savedInstanceState == null) {
+            loadFragment(new WorkspaceFragment());
+        }
 
         activityHomePageBinding.callBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +93,7 @@ public class HomePage extends AppCompatActivity {
     }
 
     private void askPermissions() {
+        int requestCode = 10102;
         ActivityCompat.requestPermissions(this, permissions, requestCode);
     }
 
@@ -90,4 +105,28 @@ public class HomePage extends AppCompatActivity {
         }
         return true;
     }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.workspace:
+                loadFragment(new WorkspaceFragment());
+                return true;
+            case R.id.chats:
+                loadFragment(new ChatFragment());
+                return true;
+            case R.id.connection_requests:
+                loadFragment(new ConnectionsFragment());
+                return true;
+        }
+        return false;
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.frame_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
+
 }

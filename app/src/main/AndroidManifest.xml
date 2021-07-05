@@ -36,7 +36,9 @@
             android:name=".activities.CallActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.HomePage" />
+        <activity
+            android:name=".activities.HomePage"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".activities.AuthenticationActivity"
             android:screenOrientation="portrait"

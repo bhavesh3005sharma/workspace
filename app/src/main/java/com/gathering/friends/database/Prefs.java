@@ -1,4 +1,4 @@
-package com.gathering.friends.Database;
+package com.gathering.friends.database;
 
 import android.content.Context;
 import android.content.SharedPreferences;

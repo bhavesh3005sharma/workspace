@@ -10,8 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.gathering.friends.Database.Prefs;
 import com.gathering.friends.R;
+import com.gathering.friends.database.Prefs;
 import com.gathering.friends.databinding.ActivityAuthenticationBinding;
 import com.gathering.friends.models.LoginRequest;
 import com.gathering.friends.models.User;

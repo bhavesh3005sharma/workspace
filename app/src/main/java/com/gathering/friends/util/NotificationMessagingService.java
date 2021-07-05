@@ -14,9 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
-import com.gathering.friends.Database.Prefs;
 import com.gathering.friends.R;
 import com.gathering.friends.activities.HomePage;
+import com.gathering.friends.database.Prefs;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
