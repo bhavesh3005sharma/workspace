@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
-
     <data>
-
         <variable
             name="chat"
             type="com.gathering.friends.models.ChatMessage" />
@@ -29,7 +27,7 @@
                 android:layout_height="50dp"
                 android:layout_marginHorizontal="8dp"
                 android:gravity="center_vertical"
-                android:text="@{`@`+chat.senderUsername}"
+                android:text="@{`@`+chat.sender_username}"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toStartOf="@+id/textViewDateTime"
                 app:layout_constraintStart_toStartOf="parent"

@@ -1,11 +1,15 @@
 package com.gathering.friends.activities;
 
+import android.Manifest;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +20,8 @@ import com.gathering.friends.adapters.ChatMessageAdapter;
 import com.gathering.friends.databinding.ActivityDirectMessageBinding;
 import com.gathering.friends.models.ChatMessage;
 import com.gathering.friends.models.Room;
+import com.gathering.friends.util.Constants;
+import com.gathering.friends.util.Helper;
 import com.gathering.friends.viewmodels.ChatMessagesViewModel;
 
 import java.util.ArrayList;
@@ -23,6 +29,13 @@ import java.util.List;
 
 public class DirectMessageActivity extends AppCompatActivity implements View.OnClickListener {
     ActivityDirectMessageBinding activityDirectMessageBinding;
+    private final String[] permissions = new String[]{(Manifest.permission.CAMERA), (Manifest.permission.RECORD_AUDIO)};
+    ChatMessagesViewModel viewModel;
+    ChatMessageAdapter adapter;
+    ArrayList<ChatMessage> list = new ArrayList<>();
+    String roomID = null;
+    Room roomDetails;
+
     private final TextWatcher textWatcher = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -41,11 +54,6 @@ public class DirectMessageActivity extends AppCompatActivity implements View.OnC
 
         }
     };
-    ChatMessagesViewModel viewModel;
-    ChatMessageAdapter adapter;
-    ArrayList<ChatMessage> list = new ArrayList<>();
-    String roomID = null;
-    Room roomDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +74,8 @@ public class DirectMessageActivity extends AppCompatActivity implements View.OnC
                 activityDirectMessageBinding.include.setRoom(room);
             }
         });
+
+        /*
         viewModel.chatMessages(roomID).observe(this, new Observer<List<ChatMessage>>() {
             @Override
             public void onChanged(List<ChatMessage> chatMessages) {
@@ -75,6 +85,9 @@ public class DirectMessageActivity extends AppCompatActivity implements View.OnC
                 activityDirectMessageBinding.recyclerViewChats.smoothScrollToPosition(list.size());
             }
         });
+        */
+
+        list.clear();
         viewModel.listenForNeMessages(roomID).observe(this, new Observer<ChatMessage>() {
             @Override
             public void onChanged(ChatMessage chatMessage) {
@@ -113,6 +126,48 @@ public class DirectMessageActivity extends AppCompatActivity implements View.OnC
             case R.id.imageViewArrowBack:
                 onBackPressed();
                 break;
+                case R.id.videoCallImg:
+                    if (!isPermissionGranted()) {
+                        askPermissions();
+                    } else {
+                        redirectToCall();
+                    }
+                    break;
         }
+    }
+
+    private void redirectToCall() {
+        if(roomDetails==null){
+            Helper.toast(DirectMessageActivity.this, "System is not ready. Connect to internet!");
+            return;
+        }
+
+        String friendUserName = roomDetails.getRoomDescription();
+
+        // because for due type room, room description contains other persons username with `@`
+        friendUserName = friendUserName.substring(1);
+        if (friendUserName.isEmpty()) {
+            Helper.toast(DirectMessageActivity.this, "Room Id not found");
+            return;
+        }
+
+        Intent intent = new Intent(DirectMessageActivity.this, CallActivity.class);
+        intent.putExtra("user_type", Constants.CALLER);
+        intent.putExtra("other_user_id", friendUserName);
+        startActivity(intent);
+    }
+
+    private void askPermissions() {
+        int requestCode = 10102;
+        ActivityCompat.requestPermissions(this, permissions, requestCode);
+    }
+
+    private Boolean isPermissionGranted() {
+
+        for (String it : permissions) {
+            if (ActivityCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED)
+                return false;
+        }
+        return true;
     }
 }

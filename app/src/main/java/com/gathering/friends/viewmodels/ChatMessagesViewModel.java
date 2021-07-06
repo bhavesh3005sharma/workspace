@@ -32,6 +32,7 @@ import java.util.Map;
 
 public class ChatMessagesViewModel extends ViewModel {
 
+    /*
     public LiveData<List<ChatMessage>> chatMessages(String roomID) {
         MutableLiveData<List<ChatMessage>> chats = new MutableLiveData<>();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("rooms").child(roomID).child("chats");
@@ -53,6 +54,7 @@ public class ChatMessagesViewModel extends ViewModel {
         });
         return chats;
     }
+     */
 
     private ChatMessage getChatFromDS(DataSnapshot ds) {
         String replyId = (String) ds.child("reply_id").getValue();
@@ -74,9 +76,7 @@ public class ChatMessagesViewModel extends ViewModel {
         query.addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot ds, @Nullable String s) {
-                if (ds.exists()) {
-                    chatMessage.setValue(getChatFromDS(ds));
-                }
+                chatMessage.setValue(getChatFromDS(ds));
             }
 
             @Override

@@ -29,7 +29,6 @@ import com.google.firebase.database.FirebaseDatabase;
 public class HomePage extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     ActivityHomePageBinding activityHomePageBinding;
-    private final String[] permissions = new String[]{(Manifest.permission.CAMERA), (Manifest.permission.RECORD_AUDIO)};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,17 +42,6 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
         if (savedInstanceState == null) {
             loadFragment(new WorkspaceFragment());
         }
-
-        activityHomePageBinding.callBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!isPermissionGranted()) {
-                    askPermissions();
-                } else {
-                    redirectToCall();
-                }
-            }
-        });
 
         activityHomePageBinding.buttonLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,33 +65,6 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
                 finish();
             }
         });
-    }
-
-    private void redirectToCall() {
-        String friendUserName = activityHomePageBinding.friendNameEdit.getText().toString().trim();
-        if (friendUserName.isEmpty()) {
-            Helper.toast(HomePage.this, "Provide name");
-            return;
-        }
-
-        Intent intent = new Intent(HomePage.this, CallActivity.class);
-        intent.putExtra("user_type", Constants.CALLER);
-        intent.putExtra("other_user_id", friendUserName);
-        startActivity(intent);
-    }
-
-    private void askPermissions() {
-        int requestCode = 10102;
-        ActivityCompat.requestPermissions(this, permissions, requestCode);
-    }
-
-    private Boolean isPermissionGranted() {
-
-        for (String it : permissions) {
-            if (ActivityCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED)
-                return false;
-        }
-        return true;
     }
 
     @Override

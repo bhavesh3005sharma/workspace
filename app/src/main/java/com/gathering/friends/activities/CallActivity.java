@@ -1,6 +1,8 @@
 package com.gathering.friends.activities;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.AudioManager;
 import android.media.ToneGenerator;
 import android.os.Bundle;
@@ -14,6 +16,7 @@ import android.webkit.WebViewClient;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.gathering.friends.R;
 import com.gathering.friends.database.Prefs;
@@ -34,6 +37,7 @@ import org.json.JSONObject;
 public class CallActivity extends AppCompatActivity implements View.OnClickListener {
     String userType = null;
     private static final String TAG = "CallActivity";
+    private final String[] permissions = new String[]{(Manifest.permission.CAMERA), (Manifest.permission.RECORD_AUDIO)};
 
     ActivityCallBinding activityCallBinding;
     boolean isPeerConnected = false, isAudio = true, isVideo = true, isCallConnected = false;
@@ -117,6 +121,28 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
     private String uniqueId = null;
+
+    @Override
+    protected void onStart() {
+        if (!isPermissionGranted()) {
+            askPermissions();
+        }
+        super.onStart();
+    }
+
+    private void askPermissions() {
+        int requestCode = 10102;
+        ActivityCompat.requestPermissions(this, permissions, requestCode);
+    }
+
+    private Boolean isPermissionGranted() {
+
+        for (String it : permissions) {
+            if (ActivityCompat.checkSelfPermission(this, it) != PackageManager.PERMISSION_GRANTED)
+                return false;
+        }
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -353,11 +379,19 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.toggleAudioBtn:
+                if (!isPermissionGranted()) {
+                    askPermissions();
+                    return;
+                }
                 isAudio = !isAudio;
                 callJavascriptFunction("javascript:toggleAudio(\"" + isAudio + "\")");
                 activityCallBinding.toggleAudioBtn.setImageResource(isAudio ? R.drawable.ic_baseline_mic_24 : R.drawable.ic_baseline_mic_off_24);
                 break;
             case R.id.toggleVideoBtn:
+                if (!isPermissionGranted()) {
+                    askPermissions();
+                    return;
+                }
                 isVideo = !isVideo;
                 callJavascriptFunction("javascript:toggleVideo(\"" + isVideo + "\")");
                 activityCallBinding.toggleVideoBtn.setImageResource(isVideo ? R.drawable.ic_baseline_videocam_24 : R.drawable.ic_baseline_videocam_off_24);
