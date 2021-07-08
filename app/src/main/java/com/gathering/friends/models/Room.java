@@ -1,8 +1,9 @@
 package com.gathering.friends.models;
 
+import java.io.Serializable;
 import java.util.HashMap;
 
-public class Room {
+public class Room implements Serializable {
     String roomId;
     String roomName;
     String roomDescription;

@@ -55,7 +55,7 @@ public class WorkspaceViewModel extends ViewModel {
 
                     // check have we fetched the data for all users?
                     if (++count[0] >= ds.getChildrenCount()) {
-                        workspaceConnected.setValue(roomsData);
+                        workspaceConnected.postValue(roomsData);
                     }
                 }
 

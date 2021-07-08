@@ -25,7 +25,6 @@ import com.gathering.friends.util.Helper;
 import com.gathering.friends.viewmodels.ChatMessagesViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class DirectMessageActivity extends AppCompatActivity implements View.OnClickListener {
     ActivityDirectMessageBinding activityDirectMessageBinding;
@@ -72,6 +71,10 @@ public class DirectMessageActivity extends AppCompatActivity implements View.OnC
             public void onChanged(Room room) {
                 roomDetails = room;
                 activityDirectMessageBinding.include.setRoom(room);
+
+                // if it is a group room hide calling button since their is not support for it yet
+                if (room.getRoomType().equals(Constants.GROUP_ROOM))
+                    activityDirectMessageBinding.include.videoCallImg.setVisibility(View.GONE);
             }
         });
 
@@ -126,13 +129,20 @@ public class DirectMessageActivity extends AppCompatActivity implements View.OnC
             case R.id.imageViewArrowBack:
                 onBackPressed();
                 break;
-                case R.id.videoCallImg:
-                    if (!isPermissionGranted()) {
-                        askPermissions();
-                    } else {
-                        redirectToCall();
-                    }
-                    break;
+            case R.id.videoCallImg:
+                if (!isPermissionGranted()) {
+                    askPermissions();
+                } else {
+                    redirectToCall();
+                }
+                break;
+            case R.id.roomDescription:
+                if (roomDetails != null && roomDetails.getRoomType().equals(Constants.GROUP_ROOM)) {
+                    Intent intent = new Intent(this, WorkspaceDescriptionActivity.class);
+                    intent.putExtra("room", roomDetails);
+                    startActivity(intent);
+                }
+                break;
         }
     }
 

@@ -16,8 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Friends"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activities.CreateWorkspaceActivity"></activity>
-        <!-- Add FCM Service -->
+        <activity android:name=".activities.WorkspaceDescriptionActivity"></activity>
+        <activity android:name=".activities.CreateWorkspaceActivity" /> <!-- Add FCM Service -->
         <service android:name=".util.NotificationMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

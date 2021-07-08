@@ -1,15 +1,12 @@
 package com.gathering.friends.activities;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -19,8 +16,6 @@ import com.gathering.friends.databinding.ActivityHomePageBinding;
 import com.gathering.friends.fragments.ChatFragment;
 import com.gathering.friends.fragments.ConnectionsFragment;
 import com.gathering.friends.fragments.WorkspaceFragment;
-import com.gathering.friends.util.Constants;
-import com.gathering.friends.util.Helper;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
