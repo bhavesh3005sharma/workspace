@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -35,6 +37,7 @@
         <activity
             android:name=".activities.DirectMessageActivity"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.DrawingSheet" />
         <activity
             android:name=".activities.HomePage"
             android:screenOrientation="portrait" />

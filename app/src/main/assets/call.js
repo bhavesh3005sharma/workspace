@@ -11,7 +11,7 @@ let peer
 function init(userId) {
     console.log(userId);
     peer = new Peer(userId, {
-        host: '2c8439f0bf6d.ngrok.io',
+        host: '7f5d2d803efb.ngrok.io',
         port: 443,
         secure:true,
         path: '/'

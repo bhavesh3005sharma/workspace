@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.Objects;
+
 public class HomePage extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     ActivityHomePageBinding activityHomePageBinding;
@@ -31,6 +33,7 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
 
         activityHomePageBinding = ActivityHomePageBinding.inflate(getLayoutInflater());
         setContentView(activityHomePageBinding.getRoot());
+        Objects.requireNonNull(getSupportActionBar()).setTitle("Workspace");
 
         activityHomePageBinding.navigation.setOnNavigationItemSelectedListener(this);
 
@@ -66,12 +69,15 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.workspace:
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Workspace");
                 loadFragment(new WorkspaceFragment());
                 return true;
             case R.id.chats:
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Chats");
                 loadFragment(new ChatFragment());
                 return true;
             case R.id.connection_requests:
+                Objects.requireNonNull(getSupportActionBar()).setTitle("Connections");
                 loadFragment(new ConnectionsFragment());
                 return true;
         }

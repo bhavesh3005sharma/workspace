@@ -4,8 +4,10 @@ import android.content.Context;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LifecycleOwner;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
 import com.gathering.friends.database.Prefs;
@@ -89,8 +91,13 @@ public class AuthViewModel extends ViewModel {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()) {
                     if (mAuth.getCurrentUser().isEmailVerified()) {
-                        mutableLiveData.setValue(Constants.SUCCESS);
-                        loadAndSaveUserData(context, loginRequest.getEmail());
+                        // user is correct verified but wait till its data get loaded and saved to prefs
+                        loadAndSaveUserData(context, loginRequest.getEmail()).observe((LifecycleOwner) context, new Observer<String>() {
+                            @Override
+                            public void onChanged(String s) {
+                                mutableLiveData.setValue(s);
+                            }
+                        });
                     } else {
                         mutableLiveData.setValue("User not Verified\n  check Email");
                     }
@@ -103,7 +110,8 @@ public class AuthViewModel extends ViewModel {
         return mutableLiveData;
     }
 
-    private void loadAndSaveUserData(Context context, String email) {
+    private LiveData<String> loadAndSaveUserData(Context context, String email) {
+        final MutableLiveData<String> mutableLiveData = new MutableLiveData<>();
         Query query = FirebaseDatabase.getInstance().getReference().child("users").orderByChild("email").equalTo(email);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -117,6 +125,9 @@ public class AuthViewModel extends ViewModel {
 
                     // get FCM token and save to remote database to send push notifications to user.
                     getFCMToken(context, user.getUsername());
+
+                    // update isCorrectUser that data is loaded
+                    mutableLiveData.setValue(Constants.SUCCESS);
                     break;
                 }
             }
@@ -126,6 +137,7 @@ public class AuthViewModel extends ViewModel {
 
             }
         });
+        return mutableLiveData;
     }
 
     private User getUserModelFromDS(DataSnapshot ds) {

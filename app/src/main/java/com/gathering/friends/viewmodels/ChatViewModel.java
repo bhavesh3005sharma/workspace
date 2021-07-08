@@ -41,12 +41,12 @@ public class ChatViewModel extends ViewModel {
         });
     }
 
-    private void loadDataOfUsers(DataSnapshot snapshot) {
+    private void loadDataOfUsers(DataSnapshot sna) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("users");
         List<User> usersData = new ArrayList<>();
 
         final int[] count = {0};
-        for (DataSnapshot ds : snapshot.getChildren()) {
+        for (DataSnapshot ds : sna.getChildren()) {
             databaseReference.child(ds.getKey()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -55,8 +55,8 @@ public class ChatViewModel extends ViewModel {
                     usersData.add(user);
 
                     // check have we fetched the data for all users?
-                    if (++count[0] >= ds.getChildrenCount()) {
-                        chatConnectedUsers.setValue(usersData);
+                    if (++count[0] >= sna.getChildrenCount()) {
+                        chatConnectedUsers.postValue(usersData);
                     }
                 }
 

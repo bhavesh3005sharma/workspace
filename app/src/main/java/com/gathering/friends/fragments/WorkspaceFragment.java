@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gathering.friends.activities.CreateWorkspaceActivity;
+import com.gathering.friends.activities.DrawingSheet;
 import com.gathering.friends.adapters.ChatAdapter;
 import com.gathering.friends.databinding.FragmentWorkspaceBinding;
 import com.gathering.friends.models.Room;
@@ -75,6 +76,14 @@ public class WorkspaceFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getContext(), CreateWorkspaceActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        fragmentWorkspaceBinding.fabDrawingSheet.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), DrawingSheet.class);
                 startActivity(intent);
             }
         });

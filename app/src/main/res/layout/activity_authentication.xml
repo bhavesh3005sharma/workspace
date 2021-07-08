@@ -18,11 +18,13 @@
             android:layout_height="300dp"
             android:layout_margin="20dp"
             android:layout_marginTop="97dp"
-            android:scaleType="centerInside"
+            android:padding="50dp"
+            android:scaleType="fitCenter"
+            app:srcCompat="@drawable/ic_workspaces"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/test" />
+            app:tint="@color/colorPrimary" />
 
         <LinearLayout
             android:id="@+id/linearLayout3"

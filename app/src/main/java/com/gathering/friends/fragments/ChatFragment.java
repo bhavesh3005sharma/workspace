@@ -1,6 +1,7 @@
 package com.gathering.friends.fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.gathering.friends.adapters.ChatAdapter;
 import com.gathering.friends.databinding.FragmentChatBinding;
 import com.gathering.friends.models.User;
 import com.gathering.friends.util.Constants;
+import com.gathering.friends.util.Helper;
 import com.gathering.friends.viewmodels.ChatViewModel;
 
 import java.util.ArrayList;
@@ -50,6 +52,7 @@ public class ChatFragment extends Fragment {
         viewModel.chatConnectedUsers().observe(getActivity(), new Observer<List<User>>() {
             @Override
             public void onChanged(List<User> users) {
+                Log.i("TAG", "onChanged: size " + users.size());
                 chatConnections.clear();
                 chatConnections.addAll(users);
                 chatAdapter.notifyDataSetChanged();
@@ -66,5 +69,13 @@ public class ChatFragment extends Fragment {
         fragmentChatBinding.recyclerViewChatConnections.setAdapter(chatAdapter);
         fragmentChatBinding.recyclerViewChatConnections.setHasFixedSize(true);
         fragmentChatBinding.recyclerViewChatConnections.setLayoutManager(linearLayoutManager);
+
+        fragmentChatBinding.logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Helper.signOut(getContext());
+                getActivity().finish();
+            }
+        });
     }
 }

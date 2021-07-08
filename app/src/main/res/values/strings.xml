@@ -28,6 +28,7 @@
     <string name="add_participants">Add Participants</string>
     <string name="select_participants_info">Select Participants to add -</string>
     <string name="left_this_workspace">Left this Workspace</string>
+    <string name="drawing_sheet">Drawing Sheet</string>
 
 
 </resources>

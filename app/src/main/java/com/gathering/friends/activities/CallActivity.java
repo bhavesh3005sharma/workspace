@@ -47,6 +47,8 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
     CountDownTimer timer;
     String userId;
     String initialCallStatus = null;
+    Handler handler; // handler To Wait For Peer js To Connect
+    ToneGenerator toneG;
     ValueEventListener listenForReceiverResponse = new ValueEventListener() {
         @Override
         public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -121,6 +123,38 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
         }
     };
     private String uniqueId = null;
+    Runnable runnable = new Runnable() { // run after a small wait for peer js to connect
+        @Override
+        public void run() {
+            if (!isPeerConnected) {
+                Helper.toast(CallActivity.this, "You're not connected. Check your internet");
+                abortGoBack();
+                return;
+            }
+
+            if (otherUserId == null) {
+                Helper.toast(CallActivity.this, "Unable to connect with other Peer Id not Found");
+                abortGoBack();
+                return;
+            }
+
+            if (userType.equals(Constants.CALLER)) {
+                sendCallRequest();
+
+                // make user status as busy on call
+                changeUserStatus(userId, Constants.BUSY);
+            } else if (userType.equals(Constants.CALL_RECEIVER) && initialCallStatus.equals(Constants.CALL_PICKED)) {
+                // accept the call and notify to other user
+                changeUserStatus(userId, uniqueId);
+
+                // change UI and wait for other person's stream
+                setupCallConnectedLayout();
+
+                // listen for the opposite person's response on call
+                firebaseRef.child("users").child(otherUserId).child("connectionId").addValueEventListener(listenerForCallerResponse);
+            }
+        }
+    };
 
     @Override
     protected void onStart() {
@@ -236,38 +270,8 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
 
         callJavascriptFunction("javascript:init(\"" + uniqueId + "\")");
 
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (!isPeerConnected) {
-                    Helper.toast(CallActivity.this, "You're not connected. Check your internet");
-                    abortGoBack();
-                    return;
-                }
-
-                if (otherUserId == null) {
-                    Helper.toast(CallActivity.this, "Unable to connect with other Peer Id not Found");
-                    abortGoBack();
-                    return;
-                }
-
-                if (userType.equals(Constants.CALLER)) {
-                    sendCallRequest();
-
-                    // make user status as busy on call
-                    changeUserStatus(userId, Constants.BUSY);
-                } else if (userType.equals(Constants.CALL_RECEIVER) && initialCallStatus.equals(Constants.CALL_PICKED)) {
-                    // accept the call and notify to other user
-                    changeUserStatus(userId, uniqueId);
-
-                    // change UI and wait for other person's stream
-                    setupCallConnectedLayout();
-
-                    // listen for the opposite person's response on call
-                    firebaseRef.child("users").child(otherUserId).child("connectionId").addValueEventListener(listenerForCallerResponse);
-                }
-            }
-        }, 5000);
+        handler = new Handler();
+        handler.postDelayed(runnable, 5000);
 
     }
 
@@ -328,11 +332,11 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
         firebaseRef.child("users").child(otherUserId).child("connectionId").addValueEventListener(listenForReceiverResponse);
 
         // set up the timer to listener for response for 30 seconds to marks the call as NOT_ANSWERED
-        ToneGenerator toneG = new ToneGenerator(AudioManager.STREAM_RING, 50);
+        toneG = new ToneGenerator(AudioManager.STREAM_VOICE_CALL, 80);
         timer = new CountDownTimer(40000, 1000) {
             public void onTick(long millisUntilFinished) {
                 activityCallBinding.callStatus.setText("Ringing");
-                toneG.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD, 200); // 200 is duration in ms
+                toneG.startTone(ToneGenerator.TONE_SUP_CALL_WAITING, 200); // 200 is duration in ms
             }
 
             public void onFinish() {
@@ -368,10 +372,15 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         changeUserStatus(userId, null);
 
+        // if toning, then stop it
+        if (toneG != null) toneG.stopTone();
+        if (timer != null) timer.cancel();
+        if (handler != null) handler.removeCallbacks(runnable);
+
         // disconnect peer
         callJavascriptFunction("javascript:disconnectPeer()");
         activityCallBinding.webView.loadUrl("about:blank");
-
+        finish();
         super.onDestroy();
     }
 
