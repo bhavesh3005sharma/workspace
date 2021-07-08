@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.gathering.friends.adapters.ChatAdapter;
 import com.gathering.friends.databinding.FragmentChatBinding;
 import com.gathering.friends.models.User;
+import com.gathering.friends.util.Constants;
 import com.gathering.friends.viewmodels.ChatViewModel;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.List;
 public class ChatFragment extends Fragment {
     FragmentChatBinding fragmentChatBinding;
     ChatViewModel viewModel;
-    ChatAdapter chatAdapter;
+    ChatAdapter<User> chatAdapter;
     List<User> chatConnections = new ArrayList<>();
 
     public ChatFragment() {
@@ -61,7 +62,7 @@ public class ChatFragment extends Fragment {
     private void initUI() {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
 
-        chatAdapter = new ChatAdapter(chatConnections, getContext());
+        chatAdapter = new ChatAdapter<User>(chatConnections, getContext(), Constants.DUO_ROOM);
         fragmentChatBinding.recyclerViewChatConnections.setAdapter(chatAdapter);
         fragmentChatBinding.recyclerViewChatConnections.setHasFixedSize(true);
         fragmentChatBinding.recyclerViewChatConnections.setLayoutManager(linearLayoutManager);

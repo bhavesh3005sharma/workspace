@@ -1,7 +1,10 @@
 package com.gathering.friends.util;
 
+import com.gathering.friends.models.Room;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 public class ConnectionRequestHandler {
 
@@ -38,7 +41,11 @@ public class ConnectionRequestHandler {
         databaseReferenceUser.child(from).child("connections").child(to).setValue(roomId);
 
         // create a duo room and add these 2 participants
-        databaseReferenceRoom.child(roomId).child("details").child("participants").child(from).setValue(roomId);
-        databaseReferenceRoom.child(roomId).child("details").child("participants").child(to).setValue(roomId);
+        HashMap<String, String> data = new HashMap<>();
+        data.put(from, roomId);
+        data.put(to, roomId);
+
+        Room room = new Room(Constants.DUO_ROOM, data);
+        databaseReferenceRoom.child(roomId).child("details").setValue(room);
     }
 }

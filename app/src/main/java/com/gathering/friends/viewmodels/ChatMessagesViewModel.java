@@ -25,10 +25,9 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ChatMessagesViewModel extends ViewModel {
 
@@ -125,13 +124,13 @@ public class ChatMessagesViewModel extends ViewModel {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot ds) {
-                if (ds.child("details").hasChild("room_type") && ds.child("details").child("room_type").toString().equals(Constants.GROUP_ROOM)) {
-                    String roomName = (String) ds.child("details").child("name").getValue();
-                    String roomDescription = (String) ds.child("details").child("description").getValue();
-                    String roomPhotoUri = (String) ds.child("details").child("photo_uri").getValue();
+                if (ds.child("details").hasChild("roomType") && Objects.equals(ds.child("details").child("roomType").getValue(), Constants.GROUP_ROOM)) {
+                    String roomName = (String) ds.child("details").child("roomName").getValue();
+                    String roomDescription = (String) ds.child("details").child("roomDescription").getValue();
+                    String roomPhotoUri = (String) ds.child("details").child("photoUri").getValue();
                     Room room = new Room(roomID, roomName, roomDescription, roomPhotoUri);
                     roomDetails.setValue(room);
-                } else {
+                } else if (ds.child("details").hasChild("roomType") && Objects.equals(ds.child("details").child("roomType").getValue(), Constants.DUO_ROOM)) {
                     // for duo room it is a private chat activity opposite user is single participant
                     // room details = opposite person's details
                     String oppositePerson = null;
@@ -145,7 +144,7 @@ public class ChatMessagesViewModel extends ViewModel {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                             String roomName = (String) snapshot.child("displayName").getValue();
-                            String roomDescription = "@" + (String) snapshot.child("username").getValue();
+                            String roomDescription = "@" + snapshot.child("username").getValue();
                             String roomPhotoUri = (String) snapshot.child("profileUri").getValue();
                             Room room = new Room(roomID, roomName, roomDescription, roomPhotoUri);
                             roomDetails.setValue(room);

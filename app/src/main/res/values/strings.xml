@@ -21,6 +21,8 @@
     <string name="requests_received">Requests Received</string>
     <string name="connected">Connected</string>
     <string name="enter_your_message_here">Enter your Message here.</string>
+    <string name="description">Description</string>
+    <string name="workspace_team_name">Workspace/Team Name</string>
 
 
 </resources>

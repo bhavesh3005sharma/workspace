@@ -7,6 +7,10 @@
         <variable
             name="user"
             type="com.gathering.friends.models.User" />
+
+        <variable
+            name="room"
+            type="com.gathering.friends.models.Room" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,7 +23,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:background="@drawable/image"
-            android:loadImage="@{user.profileUri}"
+            android:loadImage="@{(room!=null)?room.photoUri : user.profileUri}"
             android:scaleType="fitXY"
             android:src="@drawable/user"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -34,7 +38,7 @@
             android:layout_marginTop="20dp"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@{user.displayName}"
+            android:text="@{(room!=null)?room.roomName : user.displayName}"
             android:textSize="20sp"
             app:layout_constraintStart_toEndOf="@+id/profileImage"
             app:layout_constraintTop_toTopOf="parent" />
@@ -45,7 +49,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:singleLine="true"
-            android:text="@{`@`+user.username}"
+            android:text="@{(room!=null)?room.roomDescription : `@`+user.username}"
             android:textSize="15sp"
             app:layout_constraintStart_toStartOf="@+id/name"
             app:layout_constraintTop_toBottomOf="@+id/name" />
