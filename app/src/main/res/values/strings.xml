@@ -29,6 +29,10 @@
     <string name="select_participants_info">Select Participants to add -</string>
     <string name="left_this_workspace">Left this Workspace</string>
     <string name="drawing_sheet">Drawing Sheet</string>
+    <string name="update_your_profile">Update Your Profile</string>
+    <string name="enter_new_name">Enter new name</string>
+    <string name="enter_new_description">Enter new Description</string>
+    <string name="account_section">Account Section</string>
 
 
 </resources>

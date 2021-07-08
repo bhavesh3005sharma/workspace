@@ -70,6 +70,7 @@ public class ChatViewModel extends ViewModel {
 
     private User getUserModelFromDS(DataSnapshot ds) {
         return new User((String) ds.child("username").getValue(), (String) ds.child("email").getValue(),
-                (String) ds.child("displayName").getValue(), (String) ds.child("profileUri").getValue(), (String) ds.child("uid").getValue());
+                (String) ds.child("displayName").getValue(), (String) ds.child("profileUri").getValue(),
+                (String) ds.child("uid").getValue(), (String) ds.child("description").getValue());
     }
 }

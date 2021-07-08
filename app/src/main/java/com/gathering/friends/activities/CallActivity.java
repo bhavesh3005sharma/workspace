@@ -299,10 +299,7 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void abortGoBack() {
-        Intent intent = new Intent(CallActivity.this, HomePage.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        onBackPressed();
         finish();
     }
 
@@ -380,7 +377,6 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
         // disconnect peer
         callJavascriptFunction("javascript:disconnectPeer()");
         activityCallBinding.webView.loadUrl("about:blank");
-        finish();
         super.onDestroy();
     }
 

@@ -144,8 +144,9 @@ public class ChatMessagesViewModel extends ViewModel {
                     FirebaseDatabase.getInstance().getReference().child("users").child(oppositePerson).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String roomName = (String) snapshot.child("displayName").getValue();
-                            String roomDescription = "@" + snapshot.child("username").getValue();
+                            String roomName = (String) snapshot.child("displayName").getValue() + " | "
+                                    + "@" + snapshot.child("username").getValue();
+                            String roomDescription = (String) snapshot.child("description").getValue();
                             String roomPhotoUri = (String) snapshot.child("profileUri").getValue();
                             String roomType = Constants.DUO_ROOM;
                             Room room = new Room(roomID, roomName, roomDescription, roomPhotoUri, roomType, null);

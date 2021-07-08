@@ -4,20 +4,14 @@ import java.io.Serializable;
 
 public class User implements Serializable {
     String username;
-
     String email;
-
     String displayName;
-
     String profileUri;
-
     String uid;
-
     String fcm_token;
-
     boolean isLoggedIn = false;
-
     String connectionStatus;
+    String description;
 
     // this will be used for local use only :
     // when this user is visible in some other users connection chat list then this field stores their common room id
@@ -35,12 +29,21 @@ public class User implements Serializable {
         this.username = username;
     }
 
-    public User(String username, String email, String displayName, String profileUri, String uid) {
+    public User(String username, String email, String displayName, String profileUri, String uid, String description) {
         this.username = username;
         this.email = email;
         this.displayName = displayName;
         this.profileUri = profileUri;
         this.uid = uid;
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getRoomId() {

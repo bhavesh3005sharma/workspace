@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.gathering.friends.R;
 import com.gathering.friends.activities.DirectMessageActivity;
 import com.gathering.friends.databinding.LayoutChatsBinding;
 import com.gathering.friends.models.Room;
@@ -41,9 +43,18 @@ public class ChatAdapter<T> extends RecyclerView.Adapter<ChatAdapter.viewHolder>
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
         User user = null;
         Room room = null;
-        if (roomType.equals(Constants.DUO_ROOM))
+        if (roomType.equals(Constants.DUO_ROOM)) {
             user = (User) list.get(position);
-        else room = (Room) list.get(position);
+            if (user.getProfileUri() != null && !user.getProfileUri().isEmpty())
+                Glide.with(holder.layoutChatsBinding.profileImage).load(user.getProfileUri()).placeholder(R.drawable.user).into(holder.layoutChatsBinding.profileImage);
+            else holder.layoutChatsBinding.profileImage.setImageResource(R.drawable.user);
+        } else {
+            room = (Room) list.get(position);
+            if (room.getPhotoUri() != null && !room.getPhotoUri().isEmpty())
+                Glide.with(holder.layoutChatsBinding.profileImage).load(room.getPhotoUri()).placeholder(R.drawable.workspace_group).into(holder.layoutChatsBinding.profileImage);
+            else
+                holder.layoutChatsBinding.profileImage.setImageResource(R.drawable.workspace_group);
+        }
 
         holder.layoutChatsBinding.setUser(user);
         holder.layoutChatsBinding.setRoom(room);

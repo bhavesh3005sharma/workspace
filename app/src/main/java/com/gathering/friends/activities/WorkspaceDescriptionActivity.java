@@ -117,7 +117,7 @@ public class WorkspaceDescriptionActivity extends AppCompatActivity implements V
             case R.id.description_checked_icon:
                 String new_text1 = activityWorkspaceDescriptionBinding.descriptionEditText.getText().toString().trim();
                 if (new_text1.isEmpty()) {
-                    Helper.toast(this, "Name is mandatory");
+                    Helper.toast(this, "Description is mandatory");
                     return;
                 }
                 activityWorkspaceDescriptionBinding.descriptionEditIcon.setVisibility(View.VISIBLE);

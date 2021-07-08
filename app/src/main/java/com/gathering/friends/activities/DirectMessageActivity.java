@@ -147,15 +147,15 @@ public class DirectMessageActivity extends AppCompatActivity implements View.OnC
     }
 
     private void redirectToCall() {
-        if(roomDetails==null){
+        if (roomDetails == null) {
             Helper.toast(DirectMessageActivity.this, "System is not ready. Connect to internet!");
             return;
         }
 
-        String friendUserName = roomDetails.getRoomDescription();
+        String friendUserName = roomDetails.getRoomName();
 
-        // because for due type room, room description contains other persons username with `@`
-        friendUserName = friendUserName.substring(1);
+        // because for due type room, room name contains other persons username with `@`
+        friendUserName = friendUserName.substring(friendUserName.lastIndexOf('@') + 1);
         if (friendUserName.isEmpty()) {
             Helper.toast(DirectMessageActivity.this, "Room Id not found");
             return;

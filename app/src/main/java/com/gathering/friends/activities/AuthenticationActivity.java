@@ -106,7 +106,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
                     if (!valid(email, password, username, displayName)) return;
                     showProgress();
 
-                    User user = new User(username, email, displayName, null, null);
+                    User user = new User(username, email, displayName, null, null, null);
                     authViewModel.registerUser(user, password).observe(this, new Observer<String>() {
                         @Override
                         public void onChanged(String s) {
