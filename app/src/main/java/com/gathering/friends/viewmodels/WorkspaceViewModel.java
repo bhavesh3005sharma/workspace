@@ -1,7 +1,6 @@
 package com.gathering.friends.viewmodels;
 
 import android.content.Context;
-import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
@@ -32,7 +31,6 @@ public class WorkspaceViewModel extends ViewModel {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Log.i("TAG", "syncUserWorkspace onDataChange: " + snapshot);
                 loadDataOfWorkspace(snapshot);
             }
 
@@ -46,19 +44,22 @@ public class WorkspaceViewModel extends ViewModel {
     private void loadDataOfWorkspace(DataSnapshot snap) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("rooms");
         List<Room> roomsData = new ArrayList<>();
-        Log.i("TAG", "loadDataOfWorkspace: " + snap);
         final int[] count = {0};
         for (DataSnapshot ds : snap.getChildren()) {
             databaseReference.child(ds.getKey()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    Log.i("TAG", "loadDataOfWorkspace onDataChange: " + count[0] + " " + snapshot);
                     Room room = getRoomModelFromDS(snapshot.child("details"));
+
+                    // remove old object from list
+                    for (Room r : roomsData)
+                        if (r.getRoomId().equals(room.getRoomId()))
+                            roomsData.remove(r);
+
                     roomsData.add(room);
 
                     // check have we fetched the data for all users?
                     if (++count[0] >= snap.getChildrenCount()) {
-                        Log.i("TAG", "loadDataOfWorkspace onDataChange: posted value " + count[0]);
                         workspaceConnected.postValue(roomsData);
                     }
                 }

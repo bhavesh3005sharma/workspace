@@ -299,7 +299,10 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void abortGoBack() {
-        onBackPressed();
+        Intent intent = new Intent(CallActivity.this, HomePage.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
         finish();
     }
 

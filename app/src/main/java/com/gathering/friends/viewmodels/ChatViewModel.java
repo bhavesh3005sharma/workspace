@@ -52,6 +52,12 @@ public class ChatViewModel extends ViewModel {
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User user = getUserModelFromDS(snapshot);
                     user.setRoomId(ds.getValue().toString());
+
+                    // remove old object from list
+                    for (User u : usersData)
+                        if (u.getUsername().equals(user.getUsername()))
+                            usersData.remove(u);
+
                     usersData.add(user);
 
                     // check have we fetched the data for all users?

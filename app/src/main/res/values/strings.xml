@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Friends</string>
+    <string name="app_name">Workspace</string>
     <string name="email">Email</string>
     <string name="loginPassword">Password</string>
     <string name="signin">Sign-In</string>
