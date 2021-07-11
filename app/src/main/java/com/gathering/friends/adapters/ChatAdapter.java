@@ -56,7 +56,7 @@ public class ChatAdapter<T> extends RecyclerView.Adapter<ChatAdapter.viewHolder>
                 if (roomType.equals(Constants.GROUP_ROOM))
                     holder.layoutChatsBinding.profileImage.setImageResource(R.drawable.workspace_group);
                 else
-                    holder.layoutChatsBinding.profileImage.setImageResource(R.drawable.ic_videocam);
+                    holder.layoutChatsBinding.profileImage.setImageResource(R.drawable.meetings);
             }
         }
 

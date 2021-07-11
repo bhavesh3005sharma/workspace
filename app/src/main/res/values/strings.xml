@@ -47,6 +47,7 @@
     <string name="meet_details">Meet Details</string>
     <string name="meet_joining_details">Meet Joining Details</string>
     <string name="copy_to_clipboard">Copy to Clipboard</string>
+    <string name="sign_out">Sign Out</string>
 
 
 </resources>

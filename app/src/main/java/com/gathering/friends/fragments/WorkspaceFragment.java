@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gathering.friends.activities.CreateWorkspaceActivity;
+import com.gathering.friends.activities.DrawingSheet;
 import com.gathering.friends.activities.GroupCallActivity;
 import com.gathering.friends.adapters.ChatAdapter;
 import com.gathering.friends.databinding.FragmentWorkspaceBinding;
@@ -83,7 +84,7 @@ public class WorkspaceFragment extends Fragment {
         fragmentWorkspaceBinding.fabDrawingSheet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), GroupCallActivity.class);
+                Intent intent = new Intent(getContext(), DrawingSheet.class);
                 startActivity(intent);
             }
         });

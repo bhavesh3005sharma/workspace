@@ -69,13 +69,5 @@ public class ChatFragment extends Fragment {
         fragmentChatBinding.recyclerViewChatConnections.setAdapter(chatAdapter);
         fragmentChatBinding.recyclerViewChatConnections.setHasFixedSize(true);
         fragmentChatBinding.recyclerViewChatConnections.setLayoutManager(linearLayoutManager);
-
-        fragmentChatBinding.logout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Helper.signOut(getContext());
-                getActivity().finish();
-            }
-        });
     }
 }

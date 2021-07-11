@@ -52,6 +52,14 @@ public class UserAccountActivity extends AppCompatActivity implements View.OnCli
                 }
             }
         });
+
+        activityUserAccountBinding.logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Helper.signOut(UserAccountActivity.this);
+                finish();
+            }
+        });
     }
 
     @Override
