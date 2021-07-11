@@ -121,7 +121,7 @@
 
                 <TextView
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="3"
                     android:fontFamily="@font/rubik_light"
                     android:gravity="center_vertical"
@@ -192,7 +192,7 @@
                         android:layout_weight="1"
                         android:fontFamily="@font/rubik_light"
                         android:gravity="center_vertical"
-                        android:text="@string/workspace_description"
+                        android:text="@string/description"
                         android:textColor="@color/black"
                         android:textSize="18sp" />
 

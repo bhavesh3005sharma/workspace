@@ -52,8 +52,12 @@ public class ChatAdapter<T> extends RecyclerView.Adapter<ChatAdapter.viewHolder>
             room = (Room) list.get(position);
             if (room.getPhotoUri() != null && !room.getPhotoUri().isEmpty())
                 Glide.with(holder.layoutChatsBinding.profileImage).load(room.getPhotoUri()).placeholder(R.drawable.workspace_group).into(holder.layoutChatsBinding.profileImage);
-            else
-                holder.layoutChatsBinding.profileImage.setImageResource(R.drawable.workspace_group);
+            else {
+                if (roomType.equals(Constants.GROUP_ROOM))
+                    holder.layoutChatsBinding.profileImage.setImageResource(R.drawable.workspace_group);
+                else
+                    holder.layoutChatsBinding.profileImage.setImageResource(R.drawable.ic_videocam);
+            }
         }
 
         holder.layoutChatsBinding.setUser(user);
@@ -66,6 +70,7 @@ public class ChatAdapter<T> extends RecyclerView.Adapter<ChatAdapter.viewHolder>
             public void onClick(View view) {
                 Intent intent = new Intent(context, DirectMessageActivity.class);
                 intent.putExtra("room_id", (roomType.equals(Constants.DUO_ROOM)) ? finalUser.getRoomId() : finalRoom.getRoomId());
+                intent.putExtra("room_type", roomType);
                 context.startActivity(intent);
             }
         });

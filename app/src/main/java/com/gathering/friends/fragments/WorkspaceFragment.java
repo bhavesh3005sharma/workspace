@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.gathering.friends.activities.CreateWorkspaceActivity;
-import com.gathering.friends.activities.DrawingSheet;
+import com.gathering.friends.activities.GroupCallActivity;
 import com.gathering.friends.adapters.ChatAdapter;
 import com.gathering.friends.databinding.FragmentWorkspaceBinding;
 import com.gathering.friends.models.Room;
@@ -52,7 +52,7 @@ public class WorkspaceFragment extends Fragment {
         viewModel.syncUserWorkspace(getContext());
 
         // listen for updates
-        viewModel.workspaceConnected().observe(getActivity(), new Observer<List<Room>>() {
+        viewModel.roomsConnected().observe(getActivity(), new Observer<List<Room>>() {
             @Override
             public void onChanged(List<Room> rooms) {
                 workspaceConnections.clear();
@@ -83,7 +83,7 @@ public class WorkspaceFragment extends Fragment {
         fragmentWorkspaceBinding.fabDrawingSheet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(getContext(), DrawingSheet.class);
+                Intent intent = new Intent(getContext(), GroupCallActivity.class);
                 startActivity(intent);
             }
         });

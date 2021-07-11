@@ -2,10 +2,10 @@ package com.gathering.friends.util;
 
 import com.gathering.friends.activities.CallActivity;
 
-public class JavascriptInterface {
+public class DuoCallJavascriptInterface {
     CallActivity callActivity;
 
-    public JavascriptInterface(CallActivity callActivity) {
+    public DuoCallJavascriptInterface(CallActivity callActivity) {
         this.callActivity = callActivity;
     }
 

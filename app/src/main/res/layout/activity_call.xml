@@ -13,8 +13,9 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true" />
 
-    <LinearLayout
+    <include
         android:id="@+id/callControlLayout"
+        layout="@layout/layout_call_control"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -23,46 +24,7 @@
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/webView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/toggleVideoBtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/rounded_dialog"
-            android:padding="10dp"
-            android:src="@drawable/ic_baseline_videocam_24" />
-
-        <ImageView
-            android:id="@+id/acceptBtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/rounded_dialog"
-            android:padding="10dp"
-            android:src="@drawable/ic_baseline_call_24"
-            android:visibility="gone" />
-
-        <ImageView
-            android:id="@+id/endCallBtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="10dp"
-            android:background="@drawable/rounded_dialog"
-            android:padding="10dp"
-            android:src="@drawable/ic_baseline_call_end_24" />
-
-        <ImageView
-            android:id="@+id/toggleAudioBtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="10dp"
-            android:background="@drawable/rounded_dialog"
-            android:padding="10dp"
-            android:src="@drawable/ic_baseline_mic_24" />
-
-    </LinearLayout>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/textViewUsername"

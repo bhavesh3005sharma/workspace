@@ -59,12 +59,12 @@
                 android:id="@+id/textView6"
                 android:layout_width="0dp"
                 android:layout_height="1dp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:background="#CAC7C7"
                 app:layout_constraintEnd_toEndOf="@+id/videoCallImg"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="@+id/imageViewArrowBack"
-                app:layout_constraintTop_toBottomOf="@+id/roomProfileImage" />
+                app:layout_constraintTop_toBottomOf="@+id/toolbarTitle" />
 
             <TextView
                 android:id="@+id/roomDescription"

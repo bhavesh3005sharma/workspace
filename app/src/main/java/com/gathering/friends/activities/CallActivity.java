@@ -23,8 +23,8 @@ import com.gathering.friends.database.Prefs;
 import com.gathering.friends.databinding.ActivityCallBinding;
 import com.gathering.friends.util.CallService;
 import com.gathering.friends.util.Constants;
+import com.gathering.friends.util.DuoCallJavascriptInterface;
 import com.gathering.friends.util.Helper;
-import com.gathering.friends.util.JavascriptInterface;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -204,10 +204,10 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void setUpClickListeners() {
-        activityCallBinding.toggleAudioBtn.setOnClickListener(this);
-        activityCallBinding.toggleVideoBtn.setOnClickListener(this);
-        activityCallBinding.acceptBtn.setOnClickListener(this);
-        activityCallBinding.endCallBtn.setOnClickListener(this);
+        activityCallBinding.callControlLayout.toggleAudioBtn.setOnClickListener(this);
+        activityCallBinding.callControlLayout.toggleVideoBtn.setOnClickListener(this);
+        activityCallBinding.callControlLayout.acceptBtn.setOnClickListener(this);
+        activityCallBinding.callControlLayout.endCallBtn.setOnClickListener(this);
     }
 
     private void initUI() {
@@ -215,17 +215,17 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
             // set up the view as this user is making a call to ${otherUserId};
             activityCallBinding.textViewUsername.setText(otherUserId);
             activityCallBinding.callStatus.setText("Dialing");
-            activityCallBinding.acceptBtn.setVisibility(View.GONE);
+            activityCallBinding.callControlLayout.acceptBtn.setVisibility(View.GONE);
         } else if (userType.equals(Constants.CALL_RECEIVER)) {
             // set up the view as this user is receiving a call from ${otherUserId};
             if (initialCallStatus != null && initialCallStatus.equals(Constants.CALL_PICKED)) {
                 activityCallBinding.textViewUsername.setText(otherUserId);
                 activityCallBinding.callStatus.setText("Incoming Call...\n Please wait call is getting connected...");
-                activityCallBinding.acceptBtn.setVisibility(View.GONE);
+                activityCallBinding.callControlLayout.acceptBtn.setVisibility(View.GONE);
             } else {
                 activityCallBinding.textViewUsername.setText(otherUserId);
                 activityCallBinding.callStatus.setText("Incoming Call");
-                activityCallBinding.acceptBtn.setVisibility(View.VISIBLE);
+                activityCallBinding.callControlLayout.acceptBtn.setVisibility(View.VISIBLE);
             }
         } else {
             // There must be a error
@@ -246,7 +246,7 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
 
         activityCallBinding.webView.getSettings().setJavaScriptEnabled(true);
         activityCallBinding.webView.getSettings().setMediaPlaybackRequiresUserGesture(false);
-        activityCallBinding.webView.addJavascriptInterface(new JavascriptInterface(this), "Android");
+        activityCallBinding.webView.addJavascriptInterface(new DuoCallJavascriptInterface(this), "Android");
 
         loadVideoCall();
     }
@@ -393,7 +393,7 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 isAudio = !isAudio;
                 callJavascriptFunction("javascript:toggleAudio(\"" + isAudio + "\")");
-                activityCallBinding.toggleAudioBtn.setImageResource(isAudio ? R.drawable.ic_baseline_mic_24 : R.drawable.ic_baseline_mic_off_24);
+                activityCallBinding.callControlLayout.toggleAudioBtn.setImageResource(isAudio ? R.drawable.ic_baseline_mic_24 : R.drawable.ic_baseline_mic_off_24);
                 break;
             case R.id.toggleVideoBtn:
                 if (!isPermissionGranted()) {
@@ -402,7 +402,7 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 isVideo = !isVideo;
                 callJavascriptFunction("javascript:toggleVideo(\"" + isVideo + "\")");
-                activityCallBinding.toggleVideoBtn.setImageResource(isVideo ? R.drawable.ic_baseline_videocam_24 : R.drawable.ic_baseline_videocam_off_24);
+                activityCallBinding.callControlLayout.toggleVideoBtn.setImageResource(isVideo ? R.drawable.ic_baseline_videocam_24 : R.drawable.ic_baseline_videocam_off_24);
                 break;
             case R.id.acceptBtn:
                 if (userType.equals(Constants.CALL_RECEIVER)) {
@@ -416,7 +416,7 @@ public class CallActivity extends AppCompatActivity implements View.OnClickListe
                     changeUserStatus(userId, uniqueId);
 
                     // set up calling ui / hide call picking button
-                    activityCallBinding.acceptBtn.setVisibility(View.GONE);
+                    activityCallBinding.callControlLayout.acceptBtn.setVisibility(View.GONE);
                     // change UI and wait for other person's stream
                     setupCallConnectedLayout();
 

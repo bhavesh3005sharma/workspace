@@ -68,9 +68,13 @@ public class ChatMessagesViewModel extends ViewModel {
         return new ChatMessage(replyId, sender_username, message, map);
     }
 
-    public LiveData<ChatMessage> listenForNeMessages(String roomID) {
+    public LiveData<ChatMessage> listenForNeMessages(String roomID, String roomType) {
         MutableLiveData<ChatMessage> chatMessage = new MutableLiveData<>();
-        Query query = FirebaseDatabase.getInstance().getReference().child("rooms").child(roomID).child("chats");
+        if (roomType.equals(Constants.MEETING_ROOM))
+            roomType = "meetings";
+        else roomType = "rooms";
+
+        Query query = FirebaseDatabase.getInstance().getReference().child(roomType).child(roomID).child("chats");
 
         query.addChildEventListener(new ChildEventListener() {
             @Override
@@ -100,8 +104,12 @@ public class ChatMessagesViewModel extends ViewModel {
         return chatMessage;
     }
 
-    public void sendMessage(Context context, String message, String roomID) {
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("rooms").child(roomID).child("chats");
+    public void sendMessage(Context context, String message, String roomID, String roomType) {
+        if (roomType.equals(Constants.MEETING_ROOM))
+            roomType = "meetings";
+        else roomType = "rooms";
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child(roomType).child(roomID).child("chats");
         String replyId = databaseReference.push().getKey();
         Map map = new HashMap();
         map.put("timeStamp", ServerValue.TIMESTAMP);
@@ -118,13 +126,18 @@ public class ChatMessagesViewModel extends ViewModel {
         });
     }
 
-    public LiveData<Room> roomDetails(String roomID, Context context) {
+    public LiveData<Room> roomDetails(String roomID, Context context, String roomType) {
         MutableLiveData<Room> roomDetails = new MutableLiveData<>();
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("rooms").child(roomID);
+        if (roomType.equals(Constants.MEETING_ROOM))
+            roomType = "meetings";
+        else roomType = "rooms";
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child(roomType).child(roomID);
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot ds) {
-                if (ds.child("details").hasChild("roomType") && Objects.equals(ds.child("details").child("roomType").getValue(), Constants.GROUP_ROOM)) {
+                if (ds.child("details").hasChild("roomType") &&
+                        (Objects.equals(ds.child("details").child("roomType").getValue(), Constants.GROUP_ROOM) ||
+                                Objects.equals(ds.child("details").child("roomType").getValue(), Constants.MEETING_ROOM))) {
                     String roomName = (String) ds.child("details").child("roomName").getValue();
                     String roomDescription = (String) ds.child("details").child("roomDescription").getValue();
                     String roomPhotoUri = (String) ds.child("details").child("photoUri").getValue();
@@ -144,7 +157,7 @@ public class ChatMessagesViewModel extends ViewModel {
                     FirebaseDatabase.getInstance().getReference().child("users").child(oppositePerson).addValueEventListener(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            String roomName = (String) snapshot.child("displayName").getValue() + " | "
+                            String roomName = snapshot.child("displayName").getValue() + " | "
                                     + "@" + snapshot.child("username").getValue();
                             String roomDescription = (String) snapshot.child("description").getValue();
                             String roomPhotoUri = (String) snapshot.child("profileUri").getValue();
