@@ -124,6 +124,7 @@ public class MeetingsFragment extends Fragment {
         Intent intent = new Intent(getContext(), GroupCallActivity.class);
         intent.putExtra(Constants.MEET_TYPE, action);
         intent.putExtra(Constants.ROOM_ID, room_id);
+        intent.putExtra("room_type", Constants.MEETING_ROOM);
         startActivity(intent);
     }
 

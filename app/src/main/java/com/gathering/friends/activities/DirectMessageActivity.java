@@ -145,6 +145,7 @@ public class DirectMessageActivity extends AppCompatActivity implements View.OnC
                     Intent intent = new Intent(this, GroupCallActivity.class);
                     intent.putExtra(Constants.MEET_TYPE, Constants.JOIN_MEET);
                     intent.putExtra(Constants.ROOM_ID, roomID);
+                    intent.putExtra("room_type", roomType);
                     startActivity(intent);
                 }
                 break;

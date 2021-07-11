@@ -64,11 +64,13 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
     };
     String meetType = null; // 'JOIN_MEET' or 'CREATE_MEET'
     String roomId = null;
+    String rooType = null;
     boolean isAudio = true, isVideo = true, isAccessPanelVisible = false;
     ChatMessagesViewModel viewModel;
     ChatMessageAdapter adapter;
     ArrayList<ChatMessage> list = new ArrayList<>();
     Room roomDetails;
+    Boolean isChatsExpanded = true;
 
     @Override
     protected void onStart() {
@@ -103,6 +105,7 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
 
         meetType = getIntent().getStringExtra(Constants.MEET_TYPE);
         roomId = getIntent().getStringExtra(Constants.ROOM_ID);
+        rooType = getIntent().getStringExtra("room_type");
 
         if (meetType == null || roomId == null) {
             Helper.toast(this, "Connection Error");
@@ -119,7 +122,7 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
         else
             activityGroupCallBinding.toolbar.cardPhoto.setVisibility(View.VISIBLE);
 
-        viewModel.roomDetails(roomId, GroupCallActivity.this, Constants.MEETING_ROOM).observe(this, new Observer<Room>() {
+        viewModel.roomDetails(roomId, GroupCallActivity.this, rooType).observe(this, new Observer<Room>() {
             @Override
             public void onChanged(Room room) {
                 roomDetails = room;
@@ -128,7 +131,7 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
         });
 
         list.clear();
-        viewModel.listenForNeMessages(roomId, Constants.MEETING_ROOM).observe(this, new Observer<ChatMessage>() {
+        viewModel.listenForNeMessages(roomId, rooType).observe(this, new Observer<ChatMessage>() {
             @Override
             public void onChanged(ChatMessage chatMessage) {
                 list.add(chatMessage);
@@ -151,6 +154,12 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
         activityGroupCallBinding.controlAccess.setOnClickListener(this);
         activityGroupCallBinding.meetInfo.setOnClickListener(this);
         activityGroupCallBinding.chatSection.send.setOnClickListener(this);
+        activityGroupCallBinding.emoji.setOnClickListener(this);
+        activityGroupCallBinding.emojiEyeHeart.setOnClickListener(this);
+        activityGroupCallBinding.emojiThumpsUp.setOnClickListener(this);
+        activityGroupCallBinding.emojiLaughing.setOnClickListener(this);
+        activityGroupCallBinding.emojiNaughty.setOnClickListener(this);
+        activityGroupCallBinding.chats.setOnClickListener(this);
     }
 
     private void setupWebView() {
@@ -268,9 +277,38 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
             case R.id.send:
                 String message = activityGroupCallBinding.chatSection.editTextMessage.getText().toString().trim();
                 activityGroupCallBinding.chatSection.editTextMessage.setText(null);
-                viewModel.sendMessage(GroupCallActivity.this, message, roomId, Constants.MEETING_ROOM);
+                viewModel.sendMessage(GroupCallActivity.this, message, roomId, rooType);
+                break;
+            case R.id.emoji:
+                activityGroupCallBinding.layoutMeetEmoji.setVisibility(View.VISIBLE);
+                break;
+            case R.id.emojiEyeHeart:
+                sendEmoji(activityGroupCallBinding.emojiEyeHeart.getText().toString());
+                break;
+            case R.id.emojiLaughing:
+                sendEmoji(activityGroupCallBinding.emojiLaughing.getText().toString());
+                break;
+            case R.id.emojiNaughty:
+                sendEmoji(activityGroupCallBinding.emojiNaughty.getText().toString());
+                break;
+            case R.id.emojiThumpsUp:
+                sendEmoji(activityGroupCallBinding.emojiThumpsUp.getText().toString());
+                break;
+            case R.id.chats:
+                if (isChatsExpanded) {
+                    activityGroupCallBinding.chatSection.getRoot().setVisibility(View.GONE);
+                    isChatsExpanded = false;
+                } else {
+                    activityGroupCallBinding.chatSection.getRoot().setVisibility(View.VISIBLE);
+                    isChatsExpanded = true;
+                }
                 break;
         }
+    }
+
+    private void sendEmoji(String emoji) {
+        viewModel.sendMessage(this, emoji, roomId, rooType);
+        activityGroupCallBinding.layoutMeetEmoji.setVisibility(View.GONE);
     }
 
     private void showDetailsInDialogue() {
