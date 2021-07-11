@@ -8,7 +8,7 @@ public class Room implements Serializable {
     String roomName;
     String roomDescription;
     String photoUri;
-    String roomType;
+    String roomType; // DUO_ROOM, GROUP_ROOM, MEETING_ROOM
     HashMap<String, String> participants;
 
     public Room(String roomId, String roomName, String roomDescription, String photoUri, String roomType, HashMap<String, String> participants) {

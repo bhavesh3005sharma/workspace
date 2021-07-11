@@ -4,17 +4,23 @@
     <item
         android:id="@+id/workspace"
         android:icon="@drawable/ic_workspaces"
-        android:title="Workspace" />
+        android:title="@string/app_name" />
 
     <item
         android:id="@+id/chats"
         android:icon="@drawable/ic_chat"
-        android:title="Chats" />
+        android:title="@string/chats" />
 
     <item
         android:id="@+id/connection_requests"
         android:icon="@drawable/ic_connect"
-        android:title="Connections" />
+        android:title="@string/connections" />
+
+    <item
+        android:id="@+id/meetings"
+        android:icon="@drawable/ic_baseline_call_24"
+        android:iconTint="@color/white"
+        android:title="@string/meetings" />
 
     <!--    <item-->
     <!--        android:id="@+id/notifications"-->

@@ -33,6 +33,7 @@ public class DirectMessageActivity extends AppCompatActivity implements View.OnC
     ChatMessageAdapter adapter;
     ArrayList<ChatMessage> list = new ArrayList<>();
     String roomID = null;
+    String roomType = null;
     Room roomDetails;
 
     private final TextWatcher textWatcher = new TextWatcher() {
@@ -65,16 +66,17 @@ public class DirectMessageActivity extends AppCompatActivity implements View.OnC
 
         // get the room details whose chat messages need to be fetched
         roomID = getIntent().getStringExtra("room_id");
+        roomType = getIntent().getStringExtra("room_type");
 
-        viewModel.roomDetails(roomID, DirectMessageActivity.this).observe(this, new Observer<Room>() {
+        viewModel.roomDetails(roomID, DirectMessageActivity.this, roomType).observe(this, new Observer<Room>() {
             @Override
             public void onChanged(Room room) {
                 roomDetails = room;
                 activityDirectMessageBinding.include.setRoom(room);
 
-                // if it is a group room hide calling button since their is not support for it yet
-                if (room.getRoomType().equals(Constants.GROUP_ROOM))
-                    activityDirectMessageBinding.include.videoCallImg.setVisibility(View.GONE);
+                if (!room.getRoomType().equals(Constants.DUO_ROOM)) {
+                    activityDirectMessageBinding.include.roomProfileImage.setVisibility(View.GONE);
+                }
             }
         });
 
@@ -91,7 +93,7 @@ public class DirectMessageActivity extends AppCompatActivity implements View.OnC
         */
 
         list.clear();
-        viewModel.listenForNeMessages(roomID).observe(this, new Observer<ChatMessage>() {
+        viewModel.listenForNeMessages(roomID, roomType).observe(this, new Observer<ChatMessage>() {
             @Override
             public void onChanged(ChatMessage chatMessage) {
                 list.add(chatMessage);
@@ -104,7 +106,7 @@ public class DirectMessageActivity extends AppCompatActivity implements View.OnC
             public void onClick(View view) {
                 String message = activityDirectMessageBinding.editTextMessage.getText().toString().trim();
                 activityDirectMessageBinding.editTextMessage.setText(null);
-                viewModel.sendMessage(DirectMessageActivity.this, message, roomID);
+                viewModel.sendMessage(DirectMessageActivity.this, message, roomID, roomType);
             }
         });
 
@@ -130,10 +132,21 @@ public class DirectMessageActivity extends AppCompatActivity implements View.OnC
                 onBackPressed();
                 break;
             case R.id.videoCallImg:
-                if (!isPermissionGranted()) {
-                    askPermissions();
+                if (roomType.equals(Constants.DUO_ROOM)) {
+                    // For duo participants we use peer js call
+                    if (!isPermissionGranted()) {
+                        askPermissions();
+                    } else {
+                        redirectToCall();
+                    }
                 } else {
-                    redirectToCall();
+                    // for workspace a room is already created use that and for meets also this id is available
+                    // so redirect to multi participants video call activity
+                    Intent intent = new Intent(this, GroupCallActivity.class);
+                    intent.putExtra(Constants.MEET_TYPE, Constants.JOIN_MEET);
+                    intent.putExtra(Constants.ROOM_ID, roomID);
+                    intent.putExtra("room_type", roomType);
+                    startActivity(intent);
                 }
                 break;
             case R.id.roomDescription:

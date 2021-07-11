@@ -33,6 +33,20 @@
     <string name="enter_new_name">Enter new name</string>
     <string name="enter_new_description">Enter new Description</string>
     <string name="account_section">Account Section</string>
+    <string name="chats">Chats</string>
+    <string name="connections">Connections</string>
+    <string name="meetings">Meetings</string>
+    <string name="new_meeting">New Meeting</string>
+    <string name="join_a_meeting">Join a Meeting</string>
+    <string name="enter_the_meeting_room_id">Enter the Meeting Room Id</string>
+    <string name="create_a_new_meeting">Create a new Meeting</string>
+    <string name="join_the_meeting">Join the Meeting</string>
+    <string name="new_meeting_room_name">New Meeting Room Name</string>
+    <string name="screen_share">Screen Share</string>
+    <string name="reactions">Reactions</string>
+    <string name="meet_details">Meet Details</string>
+    <string name="meet_joining_details">Meet Joining Details</string>
+    <string name="copy_to_clipboard">Copy to Clipboard</string>
 
 
 </resources>

@@ -19,11 +19,12 @@ public class Constants {
 
     // call status strings
     public static final String CALL_PICKED = "CALL_PICKED";
-    public static String Error = "Error";
     public static String CALL_RECEIVER = "CALL_RECEIVER";
+    public static final String MEETING_ROOM = "MEETING_ROOM";
 
     // types of room
     public static final String DUO_ROOM = "DUO_ROOM";
+    public static String Error = "Error";
     public static String REJECTED = "REJECTED";
 
     // users connection status
@@ -34,4 +35,9 @@ public class Constants {
     public static String BUSY = "BUSY";
     public static final String WORKSPACE_CHANNEL_NAME = "WORKSPACE-NOTIFICATION-CHANNEL";
     public static final String WORKSPACE_CHANNEL_DESCRIPTION = "This channel handle all notifications coming from Workspace.";
+    // meeting joining or creating keys
+    public static String MEET_TYPE = "MEET_TYPE";
+    public static String JOIN_MEET = "JOIN_MEET";
+    public static String CREATE_MEET = "CREATE_MEET";
+    public static String ROOM_ID = "ROOM_ID";
 }

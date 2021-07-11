@@ -16,6 +16,7 @@ import com.gathering.friends.database.Prefs;
 import com.gathering.friends.databinding.ActivityHomePageBinding;
 import com.gathering.friends.fragments.ChatFragment;
 import com.gathering.friends.fragments.ConnectionsFragment;
+import com.gathering.friends.fragments.MeetingsFragment;
 import com.gathering.friends.fragments.WorkspaceFragment;
 import com.gathering.friends.models.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -70,6 +71,10 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
             case R.id.connection_requests:
                 activityHomePageBinding.toolbar.setTitle("Connections");
                 loadFragment(new ConnectionsFragment());
+                return true;
+            case R.id.meetings:
+                activityHomePageBinding.toolbar.setTitle("Meetings");
+                loadFragment(new MeetingsFragment());
                 return true;
         }
         return false;
