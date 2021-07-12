@@ -147,7 +147,7 @@ public class CallService extends Service {
         Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder =
                 new NotificationCompat.Builder(this, Constants.WORKSPACE_CHANNEL_ID)
-                        .setSmallIcon(R.drawable.ic_launcher_background)
+                        .setSmallIcon(R.mipmap.ic_launcher_round)
                         .setContentTitle(getResources().getString(R.string.app_name))
                         .setTicker("Call_STATUS")
                         .setContentText("Incoming Call")

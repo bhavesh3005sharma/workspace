@@ -24,7 +24,7 @@
         android:layout_margin="5dp"
         app:layout_constraintBottom_toTopOf="@+id/textView11"
         app:layout_constraintTop_toBottomOf="@+id/toolbar"
-        tools:layout_editor_absoluteX="1dp"></WebView>
+        tools:layout_editor_absoluteX="1dp" />
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -85,17 +85,11 @@
 
             <ImageView
                 android:id="@+id/controlAccess"
-                android:layout_width="match_parent"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:src="@drawable/ic_arrow_forward"
                 android:visibility="gone" />
-
-            <TextView
-                android:id="@+id/textView10"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/darker_gray" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -162,9 +156,10 @@
 
                     <ImageView
                         android:id="@+id/chats"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
+                        android:background="@color/placeholder_bg"
                         android:src="@drawable/ic_chat" />
 
                     <TextView
@@ -172,20 +167,24 @@
                         android:layout_height="wrap_content"
                         android:text="@string/chats" />
 
+                    <!-- Screen Sharing does not have full support for now -->
                     <ImageView
-                        android:layout_width="wrap_content"
+                        android:id="@+id/screenShare"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
+                        android:visibility="gone"
                         android:src="@drawable/ic_screen_share" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/screen_share" />
+                        android:text="@string/screen_share"
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/emoji"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
                         android:src="@drawable/ic_emoji_emotions" />
@@ -197,7 +196,7 @@
 
                     <ImageView
                         android:id="@+id/meet_info"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="10dp"
                         android:src="@drawable/ic_info" />

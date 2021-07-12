@@ -1,19 +1,14 @@
 package com.gathering.friends.util;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.gathering.friends.activities.AuthenticationActivity;
-import com.gathering.friends.database.Prefs;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
@@ -89,23 +84,5 @@ public class Helper {
 
     public static String getUniqueID() {
         return UUID.randomUUID().toString();
-    }
-
-    public static void signOut(Context context) {
-        // delete FCM token from server
-        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
-        databaseReference.child(Prefs.getUser(context).getUsername()).child("fcm_token").setValue(null);
-
-        // delete all saved data of this user
-        Prefs.setUserLoggedIn(context, false);
-        Prefs.setUserData(context, null);
-
-        // sign out from firebase auth
-        FirebaseAuth.getInstance().signOut();
-
-        Intent intent = new Intent(context, AuthenticationActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
     }
 }

@@ -1,10 +1,15 @@
 package com.gathering.friends.activities;
 
 import android.Manifest;
+import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.media.projection.MediaProjectionManager;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -42,6 +47,7 @@ import java.util.ArrayList;
 
 public class GroupCallActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int CAPTURE_PERMISSION_REQUEST_CODE = 21632;
     private final String[] permissions = new String[]{(Manifest.permission.CAMERA), (Manifest.permission.RECORD_AUDIO)};
     ActivityGroupCallBinding activityGroupCallBinding;
     private final TextWatcher textWatcher = new TextWatcher() {
@@ -70,7 +76,7 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
     ChatMessageAdapter adapter;
     ArrayList<ChatMessage> list = new ArrayList<>();
     Room roomDetails;
-    Boolean isChatsExpanded = true;
+    Boolean isChatsExpanded = true, isEmojiPressed = false, isScreenShareEnabled = false;
 
     @Override
     protected void onStart() {
@@ -160,6 +166,7 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
         activityGroupCallBinding.emojiLaughing.setOnClickListener(this);
         activityGroupCallBinding.emojiNaughty.setOnClickListener(this);
         activityGroupCallBinding.chats.setOnClickListener(this);
+        activityGroupCallBinding.screenShare.setOnClickListener(this);
     }
 
     private void setupWebView() {
@@ -280,7 +287,25 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
                 viewModel.sendMessage(GroupCallActivity.this, message, roomId, rooType);
                 break;
             case R.id.emoji:
-                activityGroupCallBinding.layoutMeetEmoji.setVisibility(View.VISIBLE);
+                if (isEmojiPressed) {
+                    activityGroupCallBinding.layoutMeetEmoji.setVisibility(View.GONE);
+                    activityGroupCallBinding.emoji.setBackgroundColor(Color.WHITE);
+                    isEmojiPressed = false;
+                } else {
+                    activityGroupCallBinding.layoutMeetEmoji.setVisibility(View.VISIBLE);
+                    activityGroupCallBinding.emoji.setBackgroundColor(getColor(R.color.placeholder_bg));
+                    isEmojiPressed = true;
+                }
+                break;
+            case R.id.screenShare:
+                if (isScreenShareEnabled) {
+                    activityGroupCallBinding.screenShare.setBackgroundColor(Color.WHITE);
+                    isScreenShareEnabled = false;
+                } else {
+                    startScreenCapture();
+                    activityGroupCallBinding.screenShare.setBackgroundColor(getColor(R.color.placeholder_bg));
+                    isScreenShareEnabled = true;
+                }
                 break;
             case R.id.emojiEyeHeart:
                 sendEmoji(activityGroupCallBinding.emojiEyeHeart.getText().toString());
@@ -298,9 +323,11 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
                 if (isChatsExpanded) {
                     activityGroupCallBinding.chatSection.getRoot().setVisibility(View.GONE);
                     isChatsExpanded = false;
+                    activityGroupCallBinding.chats.setBackgroundColor(Color.WHITE);
                 } else {
                     activityGroupCallBinding.chatSection.getRoot().setVisibility(View.VISIBLE);
                     isChatsExpanded = true;
+                    activityGroupCallBinding.chats.setBackgroundColor(getColor(R.color.placeholder_bg));
                 }
                 break;
         }
@@ -309,6 +336,27 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
     private void sendEmoji(String emoji) {
         viewModel.sendMessage(this, emoji, roomId, rooType);
         activityGroupCallBinding.layoutMeetEmoji.setVisibility(View.GONE);
+        activityGroupCallBinding.emoji.setBackgroundColor(Color.WHITE);
+        isEmojiPressed = false;
+    }
+
+    @TargetApi(21)
+    private void startScreenCapture() {
+        MediaProjectionManager mediaProjectionManager =
+                (MediaProjectionManager) getApplication().getSystemService(
+                        Context.MEDIA_PROJECTION_SERVICE);
+        startActivityForResult(
+                mediaProjectionManager.createScreenCaptureIntent(), CAPTURE_PERMISSION_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != CAPTURE_PERMISSION_REQUEST_CODE) {
+            if (resultCode == Activity.RESULT_OK) {
+                // screen share permission given
+            }
+        }
     }
 
     private void showDetailsInDialogue() {

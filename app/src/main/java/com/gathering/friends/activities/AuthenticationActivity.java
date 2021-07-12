@@ -3,9 +3,12 @@ package com.gathering.friends.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
@@ -13,14 +16,17 @@ import androidx.lifecycle.ViewModelProviders;
 import com.gathering.friends.R;
 import com.gathering.friends.database.Prefs;
 import com.gathering.friends.databinding.ActivityAuthenticationBinding;
+import com.gathering.friends.databinding.DialogueLoadingBinding;
+import com.gathering.friends.databinding.DialogueMeetActionBinding;
 import com.gathering.friends.models.LoginRequest;
 import com.gathering.friends.models.User;
 import com.gathering.friends.util.Constants;
-import com.gathering.friends.util.Helper;
 import com.gathering.friends.viewmodels.AuthViewModel;
 
 public class AuthenticationActivity extends AppCompatActivity implements View.OnClickListener {
     ActivityAuthenticationBinding activityAuthenticationBinding;
+    DialogueLoadingBinding dialogueLoadingBinding;
+    AlertDialog alertDialogProgress;
     AuthViewModel authViewModel;
     private boolean wantLogin = true;
 
@@ -36,6 +42,7 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         activityAuthenticationBinding.btnSignIn.setOnClickListener(this);
         activityAuthenticationBinding.btnSignUp.setOnClickListener(this);
         activityAuthenticationBinding.inputLayout.btnSubmit.setOnClickListener(this);
+        activityAuthenticationBinding.inputLayout.textForgotPassword.setOnClickListener(this);
     }
 
     @Override
@@ -84,12 +91,11 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
                 LoginRequest loginRequest = new LoginRequest(email, password);
                 if (wantLogin) {
                     if (!valid(email, password)) return;
-                    showProgress();
+                    showProgressDialogue("Please wait, we are verifying details...");
 
                     authViewModel.isCorrectUser(AuthenticationActivity.this, loginRequest).observe(this, new Observer<String>() {
                         @Override
                         public void onChanged(String s) {
-                            hideProgress();
 
                             if (s != null && s.equals(Constants.SUCCESS)) {
                                 s = "Login Success!";
@@ -98,19 +104,20 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                 startActivity(intent);
                                 finish();
+                                if (alertDialogProgress != null) alertDialogProgress.dismiss();
+                                return;
                             }
-                            Helper.toast(AuthenticationActivity.this, s);
+                            setProgressResult(s);
                         }
                     });
                 } else {
                     if (!valid(email, password, username, displayName)) return;
-                    showProgress();
+                    showProgressDialogue("Please wait, we are creating your account...");
 
                     User user = new User(username, email, displayName, null, null, null);
                     authViewModel.registerUser(user, password).observe(this, new Observer<String>() {
                         @Override
                         public void onChanged(String s) {
-                            hideProgress();
 
                             if (s != null && s.equals(Constants.SUCCESS)) {
                                 s = "Registered Successfully\n Verification Email Sent, Verify to Login";
@@ -120,13 +127,58 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
                                 s = "This username is already in use. Please choose another one";
                             }
 
-                            Helper.toast(AuthenticationActivity.this, s);
+                            setProgressResult(s);
                         }
                     });
                 }
-
+                break;
+            case R.id.textForgotPassword:
+                openPasswordResetDialogue();
                 break;
         }
+    }
+
+    private void openPasswordResetDialogue() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        DialogueMeetActionBinding dialogueMeetActionBinding = DialogueMeetActionBinding.inflate(getLayoutInflater());
+        builder.setView(dialogueMeetActionBinding.getRoot());
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        alertDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        alertDialog.getWindow().setBackgroundDrawable(null);
+        alertDialog.getWindow().setGravity(Gravity.BOTTOM);
+
+        dialogueMeetActionBinding.textViewTitle.setText(getString(R.string.rset_password_link_request));
+        dialogueMeetActionBinding.submitButton.setText(getString(R.string.submit));
+        dialogueMeetActionBinding.textInputData.setHint(getString(R.string.email));
+
+        dialogueMeetActionBinding.submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String email = dialogueMeetActionBinding.textInputData.getEditText().getText().toString().trim();
+
+                if (email.isEmpty()) {
+                    dialogueMeetActionBinding.textInputData.setError("Field is Required");
+                    dialogueMeetActionBinding.textInputData.requestFocus();
+                    return;
+                } else dialogueMeetActionBinding.textInputData.setError(null);
+
+                alertDialog.dismiss();
+                showProgressDialogue("Sending Password Reset Link to Email...");
+                authViewModel.sendResetPasswordLink(email).observe(AuthenticationActivity.this, new Observer<String>() {
+                    @Override
+                    public void onChanged(String s) {
+                        if (s.equals(Constants.SUCCESS)) {
+                            setProgressResult("Password Reset Link Sent to email");
+                        } else {
+                            setProgressResult(s);
+                        }
+                    }
+                });
+            }
+        });
     }
 
     private boolean valid(String email, String password) {
@@ -167,12 +219,10 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
         return true;
     }
 
-    private void showProgress() {
-        activityAuthenticationBinding.inputLayout.tashieLoader.setVisibility(View.VISIBLE);
-    }
-
-    private void hideProgress() {
-        activityAuthenticationBinding.inputLayout.tashieLoader.setVisibility(View.GONE);
+    private void setProgressResult(String s) {
+        dialogueLoadingBinding.dismissButton.setVisibility(View.VISIBLE);
+        dialogueLoadingBinding.progressLoader.setVisibility(View.GONE);
+        dialogueLoadingBinding.textViewTitle.setText(s);
     }
 
     private void setInActive(Button btn) {
@@ -183,5 +233,28 @@ public class AuthenticationActivity extends AppCompatActivity implements View.On
     private void setActive(Button btn) {
         btn.setBackgroundColor(getColor(R.color.orange));
         btn.setTextColor(getColor(R.color.white));
+    }
+
+    private void showProgressDialogue(String message) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(AuthenticationActivity.this);
+        dialogueLoadingBinding = DialogueLoadingBinding.inflate(getLayoutInflater());
+        builder.setView(dialogueLoadingBinding.getRoot());
+
+        dialogueLoadingBinding.textViewTitle.setText(message);
+
+        alertDialogProgress = builder.create();
+        alertDialogProgress.setCancelable(false);
+        alertDialogProgress.show();
+
+        alertDialogProgress.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        alertDialogProgress.getWindow().setBackgroundDrawable(null);
+        alertDialogProgress.getWindow().setGravity(Gravity.BOTTOM);
+
+        dialogueLoadingBinding.dismissButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                alertDialogProgress.dismiss();
+            }
+        });
     }
 }

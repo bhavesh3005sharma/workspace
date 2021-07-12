@@ -87,4 +87,8 @@ public class HomePage extends AppCompatActivity implements BottomNavigationView.
         transaction.commit();
     }
 
+    @Override
+    public void onBackPressed() {
+        // super.onBackPressed();
+    }
 }

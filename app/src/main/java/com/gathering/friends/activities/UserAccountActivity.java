@@ -1,5 +1,6 @@
 package com.gathering.friends.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -13,6 +14,9 @@ import com.gathering.friends.databinding.ActivityUserAccountBinding;
 import com.gathering.friends.models.User;
 import com.gathering.friends.util.Helper;
 import com.gathering.friends.viewmodels.UserViewModel;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class UserAccountActivity extends AppCompatActivity implements View.OnClickListener {
     ActivityUserAccountBinding activityUserAccountBinding;
@@ -56,7 +60,20 @@ public class UserAccountActivity extends AppCompatActivity implements View.OnCli
         activityUserAccountBinding.logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Helper.signOut(UserAccountActivity.this);
+                // delete FCM token from server
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("users");
+                databaseReference.child(Prefs.getUser(UserAccountActivity.this).getUsername()).child("fcm_token").setValue(null);
+
+                // delete all saved data of this user
+                Prefs.setUserLoggedIn(UserAccountActivity.this, false);
+                Prefs.setUserData(UserAccountActivity.this, null);
+
+                // sign out from firebase auth
+                FirebaseAuth.getInstance().signOut();
+
+                Intent intent = new Intent(UserAccountActivity.this, AuthenticationActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
                 finish();
             }
         });

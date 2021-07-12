@@ -122,7 +122,7 @@
             app:tashieloader_interpolator="@android:anim/accelerate_interpolator"
             app:tashieloader_noOfDots="6" />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSubmit"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="match_parent"
@@ -131,6 +131,7 @@
             android:layout_marginTop="32dp"
             android:backgroundTint="@color/colorAccent"
             android:text="@string/signin"
+            android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textSize="20sp"
             android:visibility="visible"
