@@ -64,7 +64,24 @@ function openRoom(room_id) {
 // join room with ${room_id}
 function joinRoom(room_id) {
     connection.join(room_id, function(isJoinedRoom, roomid, error) {
-            if(isRoomOpened === true) {
+            if(isJoinedRoom === true) {
+                console.log("room joined")
+                // notify android that call is joined
+                Android.onRoomJoined();
+            } else if (error) {
+                if(error === 'Room not available') {
+                  Android.onCallSetUpError('This room is not active for now. Please wait for moderator to Enter in the room.');
+                  return;
+                }
+                Android.onCallSetUpError(error);
+            }
+        });
+}
+
+// open or join room with ${room_id}
+function openOrJoin(room_id) {
+    connection.openOrJoin(room_id, function(isJoinedRoom, roomid, error) {
+            if(isJoinedRoom === true) {
                 console.log("room joined")
                 // notify android that call is joined
                 Android.onRoomJoined();

@@ -138,11 +138,12 @@ public class ChatMessagesViewModel extends ViewModel {
                 if (ds.child("details").hasChild("roomType") &&
                         (Objects.equals(ds.child("details").child("roomType").getValue(), Constants.GROUP_ROOM) ||
                                 Objects.equals(ds.child("details").child("roomType").getValue(), Constants.MEETING_ROOM))) {
+                    String roomId_ = (String) ds.child("details").child("roomId").getValue();
                     String roomName = (String) ds.child("details").child("roomName").getValue();
                     String roomDescription = (String) ds.child("details").child("roomDescription").getValue();
                     String roomPhotoUri = (String) ds.child("details").child("photoUri").getValue();
                     String roomType = (String) ds.child("details").child("roomType").getValue();
-                    Room room = new Room(roomID, roomName, roomDescription, roomPhotoUri, roomType, null);
+                    Room room = new Room(roomId_, roomName, roomDescription, roomPhotoUri, roomType, null);
                     roomDetails.setValue(room);
                 } else if (ds.child("details").hasChild("roomType") && Objects.equals(ds.child("details").child("roomType").getValue(), Constants.DUO_ROOM)) {
                     // for duo room it is a private chat activity opposite user is single participant
@@ -171,7 +172,7 @@ public class ChatMessagesViewModel extends ViewModel {
 
                         }
                     });
-                }
+                } else roomDetails.setValue(null);
             }
 
             @Override

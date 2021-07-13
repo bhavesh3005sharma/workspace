@@ -48,12 +48,20 @@ public class MeetsViewModel extends ViewModel {
     private void loadDataOfRooms(DataSnapshot snap) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("meetings");
         List<Room> roomsData = new ArrayList<>();
+        if (snap.getChildrenCount() == 0) roomsConnected.postValue(null);
         final int[] count = {0};
         for (DataSnapshot ds : snap.getChildren()) {
             databaseReference.child(ds.getKey()).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     Room room = getRoomModelFromDS(snapshot.child("details"));
+                    if (room.getRoomId() == null) {
+                        // check have we fetched the data for all users?
+                        if (++count[0] >= snap.getChildrenCount())
+                            roomsConnected.postValue(roomsData);
+
+                        return;
+                    }
 
                     // remove old object from list
                     for (Room r : roomsData)

@@ -62,6 +62,7 @@ public class MeetingsFragment extends Fragment {
         viewModel.roomsConnected().observe(getActivity(), new Observer<List<Room>>() {
             @Override
             public void onChanged(List<Room> rooms) {
+                if (rooms == null) return;
                 meetingRooms.clear();
                 meetingRooms.addAll(rooms);
                 chatAdapter.notifyDataSetChanged();

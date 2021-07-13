@@ -71,7 +71,7 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
     String meetType = null; // 'JOIN_MEET' or 'CREATE_MEET'
     String roomId = null;
     String rooType = null;
-    boolean isAudio = true, isVideo = true, isAccessPanelVisible = false;
+    boolean isAudio = true, isVideo = true, isAccessPanelVisible = false, openOrJoinMeet = false;
     ChatMessagesViewModel viewModel;
     ChatMessageAdapter adapter;
     ArrayList<ChatMessage> list = new ArrayList<>();
@@ -111,6 +111,7 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
 
         meetType = getIntent().getStringExtra(Constants.MEET_TYPE);
         roomId = getIntent().getStringExtra(Constants.ROOM_ID);
+        openOrJoinMeet = getIntent().getBooleanExtra("openOrJoinMeet", false);
         rooType = getIntent().getStringExtra("room_type");
 
         if (meetType == null || roomId == null) {
@@ -128,11 +129,26 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
         else
             activityGroupCallBinding.toolbar.cardPhoto.setVisibility(View.VISIBLE);
 
+        final boolean[] isWebViewLoaded = {false};
         viewModel.roomDetails(roomId, GroupCallActivity.this, rooType).observe(this, new Observer<Room>() {
             @Override
             public void onChanged(Room room) {
+                if (room == null || room.getRoomId() == null) {
+                    // Room does not exists invalid room id
+                    Helper.toast(GroupCallActivity.this, "Invalid Room Id");
+                    abortGoBack();
+                    finish();
+                    return;
+                }
+                // room validity verified
+
                 roomDetails = room;
                 activityGroupCallBinding.toolbar.setTitle(room.getRoomName());
+
+                if (!isWebViewLoaded[0])
+                    setupWebView();
+
+                isWebViewLoaded[0] = true;
             }
         });
 
@@ -149,7 +165,6 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
         initRecyclerView();
 
         setUpClickListeners();
-        setupWebView();
     }
 
     private void setUpClickListeners() {
@@ -201,6 +216,11 @@ public class GroupCallActivity extends AppCompatActivity implements View.OnClick
                 onRoomJoined();
 
                 // according to meet-type take actions
+                if (openOrJoinMeet) {
+                    callJavascriptFunction("javascript:openOrJoin(\"" + roomId + "\")");
+                    return;
+                }
+
                 if (meetType.equals(Constants.CREATE_MEET)) {
                     callJavascriptFunction("javascript:openRoom(\"" + roomId + "\")");
                 } else if (meetType.equals(Constants.JOIN_MEET)) {

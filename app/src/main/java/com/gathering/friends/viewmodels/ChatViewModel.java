@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ChatViewModel extends ViewModel {
 
@@ -47,7 +48,7 @@ public class ChatViewModel extends ViewModel {
 
         final int[] count = {0};
         for (DataSnapshot ds : sna.getChildren()) {
-            databaseReference.child(ds.getKey()).addValueEventListener(new ValueEventListener() {
+            databaseReference.child(Objects.requireNonNull(ds.getKey())).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     User user = getUserModelFromDS(snapshot);

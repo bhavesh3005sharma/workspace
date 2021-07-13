@@ -146,6 +146,9 @@ public class DirectMessageActivity extends AppCompatActivity implements View.OnC
                     intent.putExtra(Constants.MEET_TYPE, Constants.JOIN_MEET);
                     intent.putExtra(Constants.ROOM_ID, roomID);
                     intent.putExtra("room_type", roomType);
+                    // only for meeting room allow to create or join room
+                    if (roomType.equals(Constants.MEETING_ROOM))
+                        intent.putExtra("openOrJoinMeet", true);
                     startActivity(intent);
                 }
                 break;
